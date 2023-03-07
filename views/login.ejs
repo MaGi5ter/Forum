@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Document</title>
+</head>
+<body>
+    <div id="container">
+
+        <div id="navbar">
+            <h1>Makig Forum</h1>    
+        </div>
+
+        <br>
+
+        <h2 id="loginh2">Login Here</h2>
+
+        <div id="login_form">
+
+            <form action="/auth/login" method="post">
+
+                <label for="email">Login</label>
+                <br>
+                <input type="email" name="email" id="login_email">
+                <br>
+                <label for="password">Password</label>
+                <br>
+                <input type="password" name="password" id="login_password">
+                <br><br>
+                <input type="submit" value="Login">
+
+            </form>
+
+        </div>
+
+        <h2 id="loginh2">Or Register here</h2>
+
+        <div id="login_form">
+
+            <form action="/auth/register" method="post">
+                
+                <label for="email">Login</label>
+                <br>
+                <input type="email" name="email" id="register_email">
+                <br>
+                <label for="password">Password</label>
+                <br>
+                <input type="password" name="password" id="register_password">
+                <br>
+                <label for="password">Repeat Password</label>
+                <br>
+                <input type="password" name="password" id="register_repeat_password">
+                <br><br>
+                <input type="submit" value="Register">
+
+            </form>
+
+        </div>
+
+    </div>
+</body>
+</html>
