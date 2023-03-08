@@ -15,7 +15,8 @@ body {
     margin-left: auto;
     margin-right: auto;
     text-align: center;
-    border: 1px solid black;
+    border-bottom: 1px solid black;
+    border-top: 1px solid black;
     margin-top: 5px;
 }
 
@@ -40,9 +41,19 @@ body {
 
 #account_info {
     height: 20px;
+    padding-top: 5px;
+    padding-bottom: 5px;
     margin-left: auto;
     margin-right: auto;
-    border: 1px solid black;
+    border-bottom: 1px solid black;
+    
+}
+
+#username {
+    float: left;
+    margin: 0px;
+    margin-left: 25px;
+
 }
 
 #account_info form {
@@ -73,4 +84,13 @@ body {
 #login_complete_h3 {
     text-align: center;
     color: rgb(30, 211, 13);
+}
+
+#create_post_content {
+    height: 50px;
+    width: 200px;
+}
+
+#create_post_title {
+    width: 200px;
 }

@@ -6,18 +6,15 @@ router
     .get((req,res) => {
 
         if(req.session.loggedIn == true) {
-            res.render('index',{
+            res.render('createpost',{
                 logged_status:  'Logout',
                 link: 'auth/logout',
                 username: `Welcome ${req.session.username}`,
             })
         }
         else {
-            res.render('index',{
-                logged_status:  'Login',
-                link: 'login',
-                username: '',
-            })
+            req.session.login_message = 'You need to login first'
+            res.redirect('/login')
         }
     })
 

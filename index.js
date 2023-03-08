@@ -38,3 +38,6 @@ app.use('/login',loginRoute)
 
 const authRoute = require("./routes/auth")
 app.use('/auth',authRoute)
+
+const createpostRoute = require("./routes/create_post")
+app.use('/create_post',createpostRoute)

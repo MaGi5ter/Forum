@@ -6,6 +6,8 @@ let db = require('../mysql')
 router
     .route("/:type")
     .post(async (req,res,next) => {
+
+        console.log(req.params.type)
         // LOGIN SCRIPT
         if(req.params.type == 'login') {
 
@@ -30,16 +32,22 @@ router
             console.log(row)
             if(row.length > 0) {
 
-                //here will be logged data
+                req.session.token = await dbquery(`SELECT token FROM users WHERE login = '${login}' AND password = '${password}'`)
+                req.session.loggedIn = true
+                req.session.username = login
                 //jacapraca
+
                 res.redirect('/')
 
             }
             else redirect_message("password / login is wrong")
 
         } else next()
-    },async (req,res) => {
+    },async (req,res, next) => {
         // REGISTER ACCOUNT SCRIPT
+
+        console.log(req.params.type)
+
         if(req.params.type == 'register') {
 
             function redirect_message(msg) {
@@ -93,7 +101,9 @@ router
 
                 console.log( login,email,password)
 
-                let sql = `INSERT INTO users (ID, login, email, password, privileges) VALUES (NULL, '${login}', '${email}', '${password}', '0');`
+                let token = sha256(`${Date.now()}${password}${login}`) //will be used for some api requests I plan to add
+
+                let sql = `INSERT INTO users (ID, login, email, password, privileges, token) VALUES (NULL, '${login}', '${email}', '${password}', '0','${token}');`
 
                 await dbquery(sql)
 
@@ -101,6 +111,12 @@ router
 
                 res.redirect('/login')
             }
+
+        } else if(req.params.type == 'logout') {
+
+            req.session.loggedIn = false
+            req.session.token = ''
+            res.redirect('/')
 
         } else res.redirect('/')
     })

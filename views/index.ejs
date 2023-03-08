@@ -11,8 +11,11 @@
     <div id="container">
 
         <div id="account_info">
-            <form action="/login" method="get">
-                <input type="submit" value="Login">
+
+            <p id="username"><%= username %></p>
+
+            <form action="/<%= link %>" method="post">
+                <input type="submit" value="<%= logged_status %>">
             </form>
 
         </div>
@@ -24,9 +27,8 @@
         <br>
         
         <div id="create_post">
-            <form action="/create_post" method="post">
-                <input type="text" name="post_content" id="post_content_create" value="Create post..">
-                <input type="submit" value="Post it">
+            <form action="/create_post" method="get">
+                <input type="submit" value="Create post">
             </form>
         </div>
 

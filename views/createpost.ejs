@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Document</title>
+</head>
+<body>
+    <div id="container">
+
+        <div id="account_info">
+
+            <p id="username"><%= username %></p>
+
+            <form action="/<%= logged_status %>" method="get">
+                <input type="submit" value="<%= logged_status %>">
+            </form>
+
+        </div>
+
+        <div id="navbar">
+            <h1>Makig Forum</h1>    
+        </div>
+
+        <br>
+        
+        <div id="create_post">
+            <form action="/create_post" method="post">
+
+                <label for="title">Title</label>
+                <br>
+                <input type="text" name="title" id="create_post_title">
+                <br>
+                <label for="content">Content</label>
+                <br>
+                <input type="text" name="content" id="create_post_content">
+                <br><br>
+                <input type="submit" value="Create post">
+            </form>
+        </div>
+    </div>
+</body>
+</html>
