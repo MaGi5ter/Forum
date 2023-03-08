@@ -64,3 +64,13 @@ body {
 #loginh2 {
     text-align: center;
 }
+
+#login_error_h3 {
+    text-align: center;
+    color: rgb(218, 17, 17);
+}
+
+#login_complete_h3 {
+    text-align: center;
+    color: rgb(30, 211, 13);
+}
