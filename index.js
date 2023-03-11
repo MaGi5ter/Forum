@@ -1,5 +1,7 @@
 const express = require('express')
 const session = require('express-session')
+const cors = require("cors");
+var MySQLStore = require('express-mysql-session')(session);
 
 const config = require('./config.json')
 const PORT = 40387
@@ -8,13 +10,22 @@ const PORT = 40387
 const app = express()
 const oneHour = 1000 * 60 * 60;
 
+//MYSQL
+const db = require('./mysql')
+
+let sessionStore = new MySQLStore({}, db);
+
 const sessionMiddleware = session({
     secret: config.secret,
     saveUninitialized:true,
     cookie: { maxAge: oneHour },
     resave: false,
+    store: sessionStore,
 })
 
+app.use(cors({
+    origin: config.your_domain
+}));
 app.use(sessionMiddleware)
 app.use(express.json())
 app.set('view engine', 'ejs')
@@ -26,8 +37,6 @@ const server = app.listen(PORT, function () {
     console.log(`http://localhost:${PORT}`);
 });
 
-//MYSQL
-const db = require('./mysql')
 
 //ROUTES
 const mainRoute = require("./routes/main")
@@ -41,3 +50,6 @@ app.use('/auth',authRoute)
 
 const createpostRoute = require("./routes/create_post")
 app.use('/create_post',createpostRoute)
+
+const apiRoute = require("./routes/api")
+app.use('/api',apiRoute)

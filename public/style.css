@@ -81,14 +81,20 @@ body {
     color: rgb(218, 17, 17);
 }
 
+#h3_error {
+    text-align: center;
+    color: rgb(218, 17, 17);
+}
+
 #login_complete_h3 {
     text-align: center;
     color: rgb(30, 211, 13);
 }
 
 #create_post_content {
-    height: 50px;
-    width: 200px;
+    height: 200px;
+    width: 400px;
+    resize: none;
 }
 
 #create_post_title {

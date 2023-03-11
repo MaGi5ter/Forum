@@ -25,6 +25,8 @@
         </div>
 
         <br>
+
+        <h3 id="h3_error"><%= error_h3 %></h3>
         
         <div id="create_post">
             <form action="/create_post" method="post">
@@ -35,7 +37,7 @@
                 <br>
                 <label for="content">Content</label>
                 <br>
-                <input type="text" name="content" id="create_post_content">
+                <textarea name="content" cols="40" rows="5" id="create_post_content"></textarea>
                 <br><br>
                 <input type="submit" value="Create post">
             </form>

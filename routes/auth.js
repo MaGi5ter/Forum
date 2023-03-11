@@ -114,8 +114,7 @@ router
 
         } else if(req.params.type == 'logout') {
 
-            req.session.loggedIn = false
-            req.session.token = ''
+            req.session.destroy();
             res.redirect('/')
 
         } else res.redirect('/')
