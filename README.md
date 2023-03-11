@@ -5,7 +5,7 @@ I'm creating a simple forum but with full options of moderation editing, banning
 
 Login / Register System -- DONE
 
-Creating Posts
+Creating Posts -- DONE
 
 Voting on Posts by users
 
