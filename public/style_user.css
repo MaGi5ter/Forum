@@ -1,0 +1,108 @@
+body {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    overflow-x: hidden;
+}
+
+a {
+    all: unset;
+}
+
+#navbar {
+    display: flex;
+    width: 100vw;
+    border: 1px solid black;
+}
+
+#navbar p {
+    float: left;
+    margin-left: 10px;
+    padding: 5px;
+    border-radius: 5px;
+}
+
+#navbar p:hover {
+    background-color: rgb(158, 157, 157);
+}
+
+#a_log {
+    float: right;
+    margin: 15px;
+    padding: 5px;
+    border-radius: 5px;
+    border: solid 1px black;
+}
+
+#a_log:hover {
+    background-color: rgb(158, 157, 157);
+}
+
+#profile_data {
+    margin-top: 30px;
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 1000px;
+}
+
+#buttons {
+    width: 1000px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#account_info {
+    border: 1px solid black;
+    float: right;
+    width: 320px;
+    margin-left: 30px;
+    overflow: hidden;
+    border-radius: 10px;
+}
+
+#username {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+#account_background img {
+    max-width: 100%;
+}
+
+#overview {
+    border-radius: 10px;
+    float: left;
+    width: 640px;
+    overflow: hidden;
+    border: 1px solid black;
+}
+
+#post {
+    margin-left: auto;
+    margin-right: auto;
+    width: 600px;
+    border: 1px solid black;
+    margin-bottom: 10px;
+    margin-top: 10px;
+    padding-left: 10px;
+    overflow: hidden;
+}
+
+@media only screen and (max-width: 1009px) {
+    #account_info {
+        display: none;
+    }
+
+    #overview {
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    #profile_data {
+        margin-top: 30px;
+        margin-left: auto;
+        margin-right: auto;
+        width: 800px;
+    }
+
+  }

@@ -13,23 +13,21 @@
         <div id="account_info">
 
             <p id="username"><%= username %></p>
+            <a href="/<%= link %>" id="a_log"><%= logged_status %></a>
+            <div id="profile"></div>
 
-            <form action="/<%= link %>" method="post">
-                <input type="submit" value="<%= logged_status %>">
-            </form>
-
-        </div>
-
-        <div id="navbar">
-            <h1>Makig Forum</h1>    
         </div>
 
         <br>
+
+        <div id="namewagikam">
+            <h1>GIKAM</h1>
+        </div>
         
         <div id="create_post">
-            <form action="/create_post" method="get">
-                <input type="submit" value="Create post">
-            </form>
+
+            <a href="/create_post" id="create_post_button">Create Post...</a>
+
         </div>
 
         <div id="posts">
@@ -38,24 +36,25 @@
 
         <script>
 
-        // const node = document.createElement("li");
-        // const textnode = document.createTextNode("Water");
-        // node.appendChild(textnode);
-        // document.getElementById("myList").appendChild(node);
-
-
-        // <div id="post">
-        //     <h2>Title</h2>
-        //     <p>autghor</p>
-        //     <p>Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum  Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum</p>
-
 
         // </div>
 
+        // <a href="/user/<%= user_profile %>" id="a_log">PROFILE</a>
+
             let last = 0
+            let user_name = `<%= user_profile %>`
 
             start()
             async function start() {
+
+                if(user_name != ``) {
+                    let node = document.createElement("a");
+                    node.href = `/user/${user_name}`
+                    node.innerHTML = 'PROFILE'
+                    node.id = 'a_log'
+                    document.getElementById("profile").appendChild(node);
+                }
+
                 let now = Date.now()
                 let posts = await fetchposts(now)
 
@@ -64,10 +63,13 @@
 
                     let node = document.createElement("div");
                     node.id = 'post'
+                    node.onclick = function () {
+                        location.replace(`/post/${element.id}`)
+                    }
 
                     node.innerHTML = `
                         <h2>${element.title}</h2>
-                        <p>${element.author}</p>
+                        <a href="/user/${element.author}" id="author_link">${element.author}</a>
                         <p>${element.content}</p>
                     `
 

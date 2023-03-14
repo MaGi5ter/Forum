@@ -1,40 +1,61 @@
-//my first ever try to make some pseudo api
-
 const express = require('express')
 const router = express.Router()
 let db = require('../mysql')  
-
-// Since the hyphen (-) and the dot (.) are interpreted literally,
-// they can be used along with route parameters for useful purposes.
 
 router
     .route("/:username")
     .get(async (req,res) => {
 
-        if(req.params.type == 'posts') {
+        let user_username = req.params.username
 
-            //https://discord.com/api/v9/channels/684116498070896721/messages?before=1082416576982155335&limit=50
-            let before = req.query.before
+        console.log(user_username)
 
-            console.log(Date.now())
+        let sql = `SELECT * FROM users WHERE login = ?`
+        let sql_parm = [user_username]
+
+        let user_data = await dbquery(sql,sql_parm)
+
+        //console.log(user_data)
+
+        if(user_data.length > 0) {
+
+            //here I've learned how to use callbacks in functions
+
+            // function test(data, callback) {
+            //     return callback(data)
+            // }
             
-            if(before == undefined) res.send('nothin')
-            else {
-                let sql = `SELECT * FROM posts WHERE createdtimestamp < '${req.query.before}' ORDER BY createdtimestamp DESC LIMIT 50`
-                res.send(await dbquery(sql))
-            }
+            // test('data_tru',(whatcomesback) => {
+            //     console.log(whatcomesback)
+            // })
 
+            if(req.session.loggedIn == true) {
+                res.render('user',{
+                    logged_status:  'LOGOUT',
+                    link: 'auth/logout',
+                    username: user_data[0].login,
+                })
+    
+            }
+            else {
+                res.render('user',{
+                    logged_status:  'LOGIN',
+                    link: 'login',
+                    username: user_data[0].login,
+                })
+            }
         }
-        else res.send({some: 'nothing'})
+        else res.send('USER NOT FOUND')
+
 
     })
 
 module.exports = router
 
 
-function dbquery(prompt) {
+function dbquery(prompt,variables) {
     return new Promise((resolve,reject) => {
-        db.query(prompt, function (err,rows){
+        db.query(prompt,variables, function (err,rows){
            if(err) reject(err)
            else resolve(rows)
         })

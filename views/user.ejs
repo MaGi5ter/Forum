@@ -4,60 +4,61 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="style.css">
-    <title>Document</title>
+    <link rel="stylesheet" href="/style_user.css">
+    <title>Gikam</title>
 </head>
 <body>
     <div id="container">
 
-        <div id="account_info">
+        <div id="navbar">
 
-            <p id="username"><%= username %></p>
+            <div id="buttons">
+                <p>OVERVIEW</p>
+                <p>POSTS</p>
+                <p>COMMENTS</p>
 
-            <form action="/<%= link %>" method="post">
-                <input type="submit" value="<%= logged_status %>">
-            </form>
+                <a href="/" id="a_log">HOME</a>
+                <a href="/<%= link %>" id="a_log"><%= logged_status %></a>
+
+            </div>
 
         </div>
 
-        <div id="navbar">
-            <h1>Makig Forum</h1>    
+        <div id="profile_data">
+
+            <div id="overview">
+                <!-- HERE ARE POSTS OF CERTAIN USER -->
+            </div>
+
+            <div id="account_info">
+
+                <div id="account_background">
+                    <img src="https://media.discordapp.net/attachments/773904529971871765/1084443708923056188/1Ep5kwsS4nQ.png">
+                </div>
+
+                <h2 id="username"><%= username %></h2>
+    
+            </div>
+
+
         </div>
 
         <br>
-        
-        <div id="create_post">
-            <form action="/create_post" method="get">
-                <input type="submit" value="Create post">
-            </form>
-        </div>
-
-        <div id="posts">
-            <!-- HERE ARE ADDED POSTS -->
-        </div>
 
         <script>
-
-        // const node = document.createElement("li");
-        // const textnode = document.createTextNode("Water");
-        // node.appendChild(textnode);
-        // document.getElementById("myList").appendChild(node);
-
 
         // <div id="post">
         //     <h2>Title</h2>
         //     <p>autghor</p>
-        //     <p>Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum  Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum</p>
-
-
+        //     <p>Lorem ipsum rem ipsum Lorem ipsum Lorem ipsum Lorem ipsum</p>
         // </div>
 
             let last = 0
 
             start()
             async function start() {
-                let now = Date.now()
-                let posts = await fetchposts(now)
+                let user = '<%= username %>';
+                let posts = await fetchposts(user)
 
                 for (let index = 0; index < posts.length; index++) {
                     const element = posts[index];
@@ -67,21 +68,17 @@
 
                     node.innerHTML = `
                         <h2>${element.title}</h2>
-                        <p>${element.author}</p>
                         <p>${element.content}</p>
                     `
-
-                    document.getElementById("posts").appendChild(node);
-
+                    document.getElementById("overview").appendChild(node);
                     console.log(element)
                 }
             }
             
-            function fetchposts(before) {
+            function fetchposts(user) {
                 return new Promise((resolve,reject) => {
-                    console.log(before)
-
-                fetch(`/api/posts?before=${before}`, {
+                    console.log(user)
+                fetch(`/api/activity?user=${user}`, {
                     method: 'GET',
                     headers: {
                         'Accept': 'application/json',

@@ -119,6 +119,12 @@ router
 
         } else res.redirect('/')
     })
+    .get((req,res) => {
+        if(req.params.type == 'logout') {
+            req.session.destroy();
+            res.redirect('/')
+        }
+    })
 
 module.exports = router
 

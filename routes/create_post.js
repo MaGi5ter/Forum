@@ -31,7 +31,7 @@ router
         let title = req.body.title
         let content = req.body.content
 
-        if(content.includes('<')) redirect_message("You can't use some symbols")
+        if([content,title].includes('<')) redirect_message("You can't use some symbols")
         else if(title == '' || content == '') redirect_message("Can't be empty")
         else if(content.length > 4000) redirect_message("Your content is too long")
         else if(title.length > 50) redirect_message("Your title is too long")
@@ -39,18 +39,22 @@ router
 
             console.log(req.session)
 
-            let getIDsql = `SELECT ID FROM users WHERE token = '${req.session.token[0].token}'`
+            let getIDsql = `SELECT ID FROM users WHERE token = ?`
+            let sql_parm = [req.session.token[0].token]
 
-            let id = await dbquery(getIDsql)
+            let id = await dbquery(getIDsql,sql_parm)
             
             if(id.length > 0) {
 
                 console.log(id)
-                let sql = `INSERT INTO posts (ID, authorID,author, createdtimestamp, content, title) VALUES (NULL, '${id[0].ID}','${req.session.username}', '${Date.now()}', '${content}','${title}');`
+                let sql = `INSERT INTO posts (ID, authorID,author, createdtimestamp, content, title) VALUES (NULL, ? ,? , ?, ?, ?);`
+                let sql_parm = [id[0].ID, req.session.username, Date.now(), content , title]
+
 
                 console.log(req.session)
-                console.log(await dbquery(sql))
+                console.log(await dbquery(sql,sql_parm))
 
+                await sleep(500)
                 res.redirect('/')
 
             }
@@ -63,11 +67,15 @@ router
 
 module.exports = router
 
-function dbquery(prompt) {
+function dbquery(prompt,variables) {
     return new Promise((resolve,reject) => {
-        db.query(prompt, function (err,rows){
+        db.query(prompt,variables, function (err,rows){
            if(err) reject(err)
            else resolve(rows)
         })
     })
 }
+
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }

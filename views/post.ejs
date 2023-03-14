@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/style_post.css">
+    <title>GIKAM</title>
+</head>
+<body>
+
+    <div id="navbar_top">
+
+        <div id="navbar">
+
+            <div id="left">
+                <h2>GIKAM</h2>
+            </div>
+    
+            <div id="right">
+                <a href="/<%= link %>" id="a_button_right"><%= logged_status %></a>
+                <div id="profile"></div>
+                <a href="/" id="a_button_right">HOME</a>
+            </div>
+                
+        </div>
+
+    </div>
+
+    <div id="container">
+
+        <div id="container_navbar">
+
+            <h1 id="post_title"><%= post.title %></h1>
+            <p id="author_p">by: <a id="author_link" href="/user/<%= post.author %>"><%= post.author %></a></p>
+
+        </div>
+
+        <p id="post_content"><%= post.content %></p>
+
+    </div>
+
+    <div id="add_commment">
+
+        <textarea id="comment_content"></textarea>
+
+        <p id="submit" onclick="uploadcomment()">COMMENT</p>
+            
+    </div>
+
+    <div id="comments">
+        <!-- HERE ARE COMMENTS -->
+    </div>
+
+    <script>
+
+        let user_name = `<%= user_profile %>`
+
+        start()
+        async function start() {
+
+            if(user_name != ``) {
+                let node = document.createElement("a");
+                node.href = `/user/${user_name}`
+                node.innerHTML = 'PROFILE'
+                node.id = 'a_button_right'
+                document.getElementById("profile").appendChild(node);
+            }
+        }
+        let data = {
+            test: 'test'
+        }
+
+        data = JSON.stringify(data)
+
+
+        fetch('/api/comment', {
+            method: "POST",
+            headers: {'Content-Type': 'application/json'},
+            mode: 'cors',
+            body: JSON.stringify(data),
+        })
+            .then(res => res.json())
+            .then(data => console.log(data))
+            .catch(err => console.log(err))
+
+
+
+        // console.log(await post('/api/comment',{
+        //     content: 'test',
+        //     author: 'makig'
+        // }))
+
+        // async function postData(url, data) {
+        // const response = await fetch(url, {
+        //     method: "POST", 
+        //     mode: "cors", 
+        //     cache: "no-cache", 
+        //     credentials: "same-origin", 
+        //     headers: {
+        //     "Content-Type": "application/json",
+        //     },
+        //     redirect: "follow", 
+        //     referrerPolicy: "no-referrer", 
+        //     body: JSON.stringify(data), 
+        // });
+        // return response.json();
+        // }
+
+        // function post(url,data) {
+        //     return new Promise((resolve, reject) => {
+        //         postData(url, data).then((data) => {
+        //             resolve(data)
+        //         });
+        //     })
+        // }
+
+    </script>
+</body>
+</html>

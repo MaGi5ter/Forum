@@ -1,14 +1,14 @@
 const express = require('express')
 const session = require('express-session')
 const cors = require("cors");
-var MySQLStore = require('express-mysql-session')(session);
+var   MySQLStore = require('express-mysql-session')(session);
 
 const config = require('./config.json')
 const PORT = 40387
 
 //APP SETUP
 const app = express()
-const oneHour = 1000 * 60 * 60;
+const age = 1000 * 60 * 60 * 6;
 
 //MYSQL
 const db = require('./mysql')
@@ -18,7 +18,7 @@ let sessionStore = new MySQLStore({}, db);
 const sessionMiddleware = session({
     secret: config.secret,
     saveUninitialized:true,
-    cookie: { maxAge: oneHour },
+    cookie: { maxAge: age },
     resave: false,
     store: sessionStore,
 })
@@ -53,3 +53,9 @@ app.use('/create_post',createpostRoute)
 
 const apiRoute = require("./routes/api")
 app.use('/api',apiRoute)
+
+const userRoute = require("./routes/user")
+app.use('/user',userRoute)
+
+const postRoute = require("./routes/post")
+app.use('/post',postRoute)

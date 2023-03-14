@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="style.css">
-    <title>Document</title>
+    <link rel="stylesheet" href="style.css" type="text/css">
+    <title>GIKAM</title>
 </head>
 <body>
     <div id="container">
@@ -14,14 +14,13 @@
 
             <p id="username"><%= username %></p>
 
-            <form action="/<%= logged_status %>" method="get">
-                <input type="submit" value="<%= logged_status %>">
-            </form>
+            <a href="/<%= link %>" id="a_log" ><%= logged_status %></a>
+            <a href="/" id="a_log">HOME</a>
 
         </div>
 
         <div id="navbar">
-            <h1>Makig Forum</h1>    
+            <h1>GIKAM</h1>    
         </div>
 
         <br>
