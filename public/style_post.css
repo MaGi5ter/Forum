@@ -28,6 +28,10 @@ a {
     margin-left: 50px;
 }
 
+#left:hover{
+    cursor: pointer;
+}
+
 #right {
     display: flex;
     margin-right: 50px;
@@ -81,6 +85,13 @@ a {
     margin-top: 35px;
 }
 
+#ifloggedaddcomment h2{
+    width: 900px;
+    margin-left: auto;
+    margin-right: auto;
+    color: red;
+}
+
 #add_commment{
     margin: 0;
     padding: 0;
@@ -116,4 +127,106 @@ a {
     border-radius: 5px;
     resize: vertical;
     font-size: large;
+}
+
+#comments {
+    border: solid 1px black;
+    width: 900px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 20px;
+    border-radius: 5px;
+}
+
+#comment {
+    border-left: solid 1px black;
+    border-top: solid 1px black;
+    margin-left: 20px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    margin-right: 10px;
+    border-top-left-radius: 5px;
+}
+
+.replie {
+    border-left: solid 1px black;
+    margin-left: 20px;
+}
+
+#conte {
+    margin-left: 10px;
+}
+
+#conte p {
+    margin-top: 0px;
+    margin-left: 10px;
+}
+
+#nav_com {
+    display: flex;
+}
+
+#replybutton {
+    margin-top: 22px;
+    border-radius: 5px;
+    margin-left: 10px;
+    width: 35px;
+    font-size: 15px;
+    height: 20px;
+    padding: 0;
+}
+#replybutton p {
+    margin-top: 1px;
+    margin: 0;
+    margin-left: 2px;
+}
+
+#replybutton:hover {
+    background-color: rgb(158, 157, 157);
+    cursor: pointer;
+}
+
+#reply_content {
+    margin-top: 5px;
+    margin-bottom: 5px;
+    margin-left: 20px;
+    width: 405px;
+    height: 80px;
+    border-radius: 5px;
+    resize: vertical;
+    font-size: large;
+}
+
+#justflex {
+    display: flex;
+}
+
+#closetextare {
+    text-align: center;
+    margin: 0;
+    margin-left: 10px;
+    border: solid 1px black;
+    padding-top: 8px;
+    padding-bottom: 8px;
+    border-radius: 5px;
+    width: 40px;
+}
+
+#closetextare:hover{
+    background-color: rgb(219, 93, 93);
+    cursor: pointer;
+}
+
+#submitreply {
+    margin: 0;
+    margin-left: 20px;
+    border: solid 1px black;
+    padding: 8px;
+    border-radius: 5px;
+    width: 340px;
+}
+
+#submitreply:hover {
+    background-color: rgb(174, 221, 120);
+    cursor: pointer;
 }

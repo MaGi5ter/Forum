@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/style_post.css">
+    <link rel="stylesheet" href="/style_post.css"  type="text/css">
     <title>GIKAM</title>
 </head>
 <body>
@@ -14,7 +14,8 @@
         <div id="navbar">
 
             <div id="left">
-                <h2>GIKAM</h2>
+                <a href="/"><h2>GIKAM</h2></a>
+                <!-- <h2>GIKAM</h2> -->
             </div>
     
             <div id="right">
@@ -40,16 +41,26 @@
 
     </div>
 
-    <div id="add_commment">
+    <div id="ifloggedaddcomment"></div>
 
-        <textarea id="comment_content"></textarea>
+    <script>
+        if("<%= user_profile %>" != "") {
+            document.getElementById('ifloggedaddcomment').innerHTML = 
+            `
+            <div id="add_commment">
+                <textarea id="comment_content"></textarea>
 
-        <p id="submit" onclick="uploadcomment()">COMMENT</p>
-            
-    </div>
+                <p id="submit" onclick="uploadcomment()">COMMENT</p>
+            </div>
+            `
+        }
+
+    </script>
 
     <div id="comments">
         <!-- HERE ARE COMMENTS -->
+
+
     </div>
 
     <script>
@@ -66,54 +77,178 @@
                 node.id = 'a_button_right'
                 document.getElementById("profile").appendChild(node);
             }
+
+            loadcomments()
+
         }
-        let data = {
-            test: 'test'
+
+        async function loadcomments() {
+            let comments = await fetchdata(`/api/comments?post=<%= post.id %>`)
+
+            for (let index = 0; index < comments.length; index++) {
+                const element = comments[index];
+                
+                let node = document.createElement("div");
+                node.id = 'comment'
+                node.className = `${element.id}`
+                // node.onclick = function () {
+                //     location.replace(`/post/${element.id}`)
+                // }
+
+                node.innerHTML = `
+
+                    <div id="nav_com">
+                        <div id="conte">
+                            <h3><a id="author_link" href="/user/${element.author}">${element.author}</a></h3>
+                        </div>
+                        <div id="replybutton" onclick="reply_textarea(${element.id})"><p>reply</p></div>
+                    </div>
+
+                    <div id="conte">
+                    <p>${element.content}</p>
+                    </div>
+                    <div id="${element.id}"></div>
+                    <div id="${element.id}_replies" class="replie"></div>
+
+                `
+
+                document.getElementById("comments").appendChild(node);
+
+                await replies(element.id)
+            }
+
+            async function replies(id){
+                await fetchdata(`/api/replies?comment=${id}`).then(async (repli) => {
+                    if(repli.length > 0) {
+                        for (let index = 0; index < repli.length; index++) {
+                            const element = repli[index];
+
+                            let node = document.createElement("div");
+
+                            node.innerHTML = `
+                                <div id="nav_com">
+                                <div id="conte">
+                                    <h3><a id="author_link" href="/user/${element.author}">${element.author}</a></h3>
+                                </div>
+                                <div id="replybutton" onclick="reply_textarea(${element.id})"><p>reply</p></div>
+                            </div>
+
+                            <div id="conte">
+                            <p>${element.content}</p>
+                            </div>
+                            <div id="${element.id}"></div>
+                            <div id="${element.id}_replies" class="replie"></div>
+                            
+                            `
+
+                            document.getElementById(`${id}_replies`).appendChild(node)
+
+                            await replies(element.id)
+                        }
+                    }
+                    else {
+                        return
+                    }
+                })
+            }
+
         }
 
-        data = JSON.stringify(data)
+        async function reply_textarea(id) {
 
+            if(`<%= user_profile %>` != "") {
+                document.getElementById(id).innerHTML = `
+            
+                <div id="${id}form">
 
-        fetch('/api/comment', {
-            method: "POST",
-            headers: {'Content-Type': 'application/json'},
-            mode: 'cors',
-            body: JSON.stringify(data),
-        })
-            .then(res => res.json())
-            .then(data => console.log(data))
-            .catch(err => console.log(err))
+                <textarea id="reply_content" class="${id}_reply"></textarea>
 
+                <div id="justflex"> 
+                    <p id="submitreply" onclick="uploadreply(${id})">REPLY</p>
+                    <p id="closetextare" onclick="closearea(${id})">X</p>
+                </div>
+                    
+                </div>
+            
+            `
+            } else {
+                document.getElementById('ifloggedaddcomment').innerHTML = `
+                 <h2>You need to be logged to comment</h2>
+                `
+                setTimeout(() => {
+                    document.getElementById('ifloggedaddcomment').innerHTML = ""
+                }, 4000);
+            }
 
+        }
 
-        // console.log(await post('/api/comment',{
-        //     content: 'test',
-        //     author: 'makig'
-        // }))
+        async function closearea(id) {
+            document.getElementById(id).innerHTML = ''
+        }
 
-        // async function postData(url, data) {
-        // const response = await fetch(url, {
-        //     method: "POST", 
-        //     mode: "cors", 
-        //     cache: "no-cache", 
-        //     credentials: "same-origin", 
-        //     headers: {
-        //     "Content-Type": "application/json",
-        //     },
-        //     redirect: "follow", 
-        //     referrerPolicy: "no-referrer", 
-        //     body: JSON.stringify(data), 
-        // });
-        // return response.json();
-        // }
+        async function uploadreply(id){
+            let data = document.getElementsByClassName(`${id}_reply`)[0].value
 
-        // function post(url,data) {
-        //     return new Promise((resolve, reject) => {
-        //         postData(url, data).then((data) => {
-        //             resolve(data)
-        //         });
-        //     })
-        // }
+            console.log(data)
+            // console.log(document.getElementsByClassName(`${id}_reply`))
+            await postData('/api/comment',{
+                content : data,
+                postID: `<%= post.id %>`,
+                reply: id,
+            }).then((response) => {
+                if(response == 'COMMENT ADDED') {
+                    document.getElementById('comments').innerHTML = ''
+                    loadcomments()
+                }
+            })
+        }
+
+        async function uploadcomment() {
+            let data = document.getElementById('comment_content').value
+            await postData('/api/comment',{
+                content : data,
+                postID: `<%= post.id %>`,
+                reply: null,
+            }).then((response) => {
+                if(response == 'COMMENT ADDED') {
+                    document.getElementById('comments').innerHTML = ''
+                    loadcomments()
+                }
+            })
+        }
+
+        function postData(url = "",data = {}) {
+            return new Promise((resolve, reject) => {
+                data = JSON.stringify(data)
+                let xhr = new XMLHttpRequest();
+                xhr.open("POST", url);
+                xhr.setRequestHeader("Accept", "application/json");
+                xhr.setRequestHeader("Content-Type", "application/json");
+
+                xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4) {
+                    console.log(xhr.status);
+                    console.log(xhr.responseText);
+                    resolve(xhr.responseText)
+                }};
+                xhr.send(data);
+            })
+        }
+
+        function fetchdata(url) {
+            return new Promise((resolve,reject) => {
+            fetch(url, {
+                method: 'GET',
+                headers: {
+                    'Accept': 'application/json',
+                },
+            }).then(response => {
+                return response.text();
+                }).then(function(data) {
+                    resolve(JSON.parse(data)); 
+                });
+            })
+        }
 
     </script>
 </body>

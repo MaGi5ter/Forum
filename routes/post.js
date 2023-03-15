@@ -19,18 +19,36 @@ router
 
         if(postData.length > 0) {
 
-            res.render('post',{
-                post: {
-                    id : postData[0].id,
-                    author : postData[0].author,
-                    content: postData[0].content,
-                    title: postData[0].title
-                },
-                logged_status:  'Logout',
-                link: 'auth/logout',
-                username: `Welcome ${req.session.username}`,
-                user_profile: req.session.username
-            })
+            if(req.session.loggedIn == true) {
+                res.render('post',{
+                    post: {
+                        id : postData[0].id,
+                        author : postData[0].author,
+                        content: postData[0].content,
+                        title: postData[0].title
+                    },
+                    logged_status:  'Logout',
+                    logged: true,
+                    link: 'auth/logout',
+                    username: `Welcome ${req.session.username}`,
+                    user_profile: req.session.username
+                })
+            }
+            else {
+                res.render('post',{
+                    post: {
+                        id : postData[0].id,
+                        author : postData[0].author,
+                        content: postData[0].content,
+                        title: postData[0].title
+                    },
+                    logged_status:  'Login',
+                    logged: false,
+                    link: 'login',
+                    username: `Welcome ${req.session.username}`,
+                    user_profile: req.session.username
+                })
+            }
 
         } else {
             res.send('DONT FOUND THAT POST')
