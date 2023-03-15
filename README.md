@@ -9,7 +9,7 @@ Creating Posts -- DONE
 
 Voting on Posts by users
 
-Comments on posts
+Comments on posts - DONE
 
 Prrofiles customization
 
