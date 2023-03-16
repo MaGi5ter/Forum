@@ -23,7 +23,7 @@ router
             
             if(before == undefined) res.send('nothin')
             else {
-                let sql = `SELECT * FROM posts WHERE createdtimestamp < ? ORDER BY createdtimestamp DESC LIMIT 50`
+                let sql = `SELECT * FROM posts WHERE createdAt < ? ORDER BY createdAt DESC LIMIT 50`
                 let sql_parm = [req.query.before]
                 res.send(await dbquery(sql , sql_parm))
             }
@@ -36,7 +36,7 @@ router
             let author = req.query.user
             if(author == undefined) res.send('nothin')
             else {
-                let sql = `SELECT * FROM posts WHERE author = ? ORDER BY createdtimestamp DESC LIMIT 50`
+                let sql = `SELECT * FROM posts WHERE author = ? ORDER BY createdAt DESC LIMIT 50`
                 let sql_parm = [author]
 
                 let user_activity = await dbquery(sql,sql_parm)
@@ -74,6 +74,36 @@ router
                 res.send(comment_replies)
             }
         }
+        else if(req.params.type == 'usercomments') {
+
+            //it will respond with selected post comments
+
+            let user_overview = req.query.user
+            if(user_overview == undefined) res.send('nothin')
+            else {
+                let sql = `SELECT * FROM comments WHERE author = ? ORDER BY createdAt DESC LIMIT 50`
+                let sql_parm = [user_overview]
+
+                let user_comments = await dbquery(sql,sql_parm)
+
+                res.send(user_comments)
+            }
+        }
+        else if(req.params.type == 'post_data') {
+
+            //it will respond with selected post comments
+
+            let post_id = req.query.id
+            if(post_id == undefined) res.send('nothin')
+            else {
+                let sql = `SELECT * FROM posts WHERE id = ? LIMIT 50`
+                let sql_parm = [post_id]
+
+                let post_data = await dbquery(sql,sql_parm)
+
+                res.send(post_data)
+            }
+        }
         else res.send({some: 'nothing'})
 
     })
@@ -89,6 +119,7 @@ router
                 console.log(post)
 
                 if(data.content == '' || data.content == undefined ) res.send('EMPTY CONTENT')
+                else if(data.content.length > 5000) res.send('Meassage too long')
                 else if(post.length == 0) res.send('THIS POST DONT EXIST')
                 else {
 

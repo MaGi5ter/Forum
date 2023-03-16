@@ -8,7 +8,7 @@ router
 
         let user_username = req.params.username
 
-        console.log(user_username)
+        console.log(req.session)
 
         let sql = `SELECT * FROM users WHERE login = ?`
         let sql_parm = [user_username]

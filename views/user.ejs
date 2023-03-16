@@ -13,9 +13,9 @@
         <div id="navbar">
 
             <div id="buttons">
-                <p>OVERVIEW</p>
-                <p>POSTS</p>
-                <p>COMMENTS</p>
+                <p onclick="overview_load()">OVERVIEW</p>
+                <p onclick="posts_load()">POSTS</p>
+                <p onclick="user_comments()">COMMENTS</p>
 
                 <a href="/" id="a_log">HOME</a>
                 <a href="/<%= link %>" id="a_log"><%= logged_status %></a>
@@ -40,7 +40,6 @@
     
             </div>
 
-
         </div>
 
         <br>
@@ -53,12 +52,91 @@
         //     <p>Lorem ipsum rem ipsum Lorem ipsum Lorem ipsum Lorem ipsum</p>
         // </div>
 
+            let selected = 'overview'
+            let user = '<%= username %>';
             let last = 0
 
             start()
             async function start() {
+                overview_load()
+            }
+
+            async function overview_load() {
+
+                document.getElementById("overview").innerHTML = ''
+
                 let user = '<%= username %>';
-                let posts = await fetchposts(user)
+                let posts = await fetchdata(`/api/activity?user=${user}`)
+                let comments = await fetchdata(`/api/usercomments?user=${user}`)
+
+                let data = []
+
+                for (let index = 0; index < posts.length; index++) {
+                    const element = posts[index];
+                    data.push(element)
+                }
+
+                for (let index = 0; index < comments.length; index++) {
+                    const element = comments[index];
+                    data.push(element)
+                }
+
+                data = await data.sort((a,b) => { return a.createdAt - b.createdAt })
+                data.reverse()
+                console.log(data)
+
+                if(data.length == 0) {
+                    let node = document.createElement("div");
+                    node.id = 'post'
+
+                    node.innerHTML = `
+                        <h2>THIS USER NEVER POSTED ANYTHING</h2>
+                    `
+                    document.getElementById("overview").appendChild(node);
+                    return
+                }
+
+                for (let index = 0; index < data.length; index++) {
+                    const element = data[index];
+
+                    let node = document.createElement("div");
+                    node.id = 'post'
+
+                    if(element.title) {
+                        node.innerHTML = `
+                            <h2>${element.title}</h2>
+                            <p>${element.content}</p>
+                        `
+                        document.getElementById("overview").appendChild(node);
+                        }
+                    else {
+                        let post_data = await fetchdata(`/api/post_data?id=${element.postID}`)
+
+                        node.innerHTML = `
+                            <p>commented <b><a id="basic_a" href="/post/${post_data[0].id}">${post_data[0].title}</a></b> posted by  <a id="basic_a" href="/user/${post_data[0].author}" >${post_data[0].author}</a></p>
+                            <p>${element.content}</p>
+                        `
+                        document.getElementById("overview").appendChild(node);
+                    }
+                }
+            }
+
+            async function posts_load(){
+                document.getElementById("overview").innerHTML = ''
+
+                let user = '<%= username %>';
+                let posts = await fetchdata(`/api/activity?user=${user}`)
+
+                if(posts.length == 0) {
+                    let node = document.createElement("div");
+                    node.id = 'post'
+
+                    node.innerHTML = `
+                        <h2>THIS USER NEVER POSTED ANYTHING</h2>
+                    `
+                    document.getElementById("overview").appendChild(node);
+                    return
+                }
 
                 for (let index = 0; index < posts.length; index++) {
                     const element = posts[index];
@@ -74,11 +152,45 @@
                     console.log(element)
                 }
             }
+
+            async function user_comments() {
+                let user = '<%= username %>';
+                let comments = await fetchdata(`/api/usercomments?user=${user}`)
+
+                document.getElementById("overview").innerHTML = ''
+
+                if(comments.length == 0) {
+                    let node = document.createElement("div");
+                    node.id = 'post'
+
+                    node.innerHTML = `
+                        <h2>THIS USER NEVER COMMENTED ANYTHING</h2>
+                    `
+                    document.getElementById("overview").appendChild(node);
+                    return
+                }
+
+                for (let index = 0; index < comments.length; index++) {
+                    const element = comments[index];
+
+                    let node = document.createElement("div");
+                    node.id = 'post'
+
+                    let post_data = await fetchdata(`/api/post_data?id=${element.postID}`)
+
+                    node.innerHTML = `
+                        <p>commented <b><a id="basic_a" href="/post/${post_data[0].id}">${post_data[0].title}</a></b> posted by  <a id="basic_a" href="/user/${post_data[0].author}" >${post_data[0].author}</a></p>
+                        <p>${element.content}</p>
+                    `
+                    document.getElementById("overview").appendChild(node);
+                    console.log(element)
+                }
+
+            }
             
-            function fetchposts(user) {
+            function fetchdata(url) {
                 return new Promise((resolve,reject) => {
-                    console.log(user)
-                fetch(`/api/activity?user=${user}`, {
+                fetch(url, {
                     method: 'GET',
                     headers: {
                         'Accept': 'application/json',
