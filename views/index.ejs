@@ -4,25 +4,30 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style_main.css">
     <title>Document</title>
 </head>
 <body>
+
+    <div id="navbar_top">
+
+        <div id="navbar">
+
+            <div id="left">
+                <a href="/"><h2>GIKAM</h2></a>
+                <!-- <h2>GIKAM</h2> -->
+            </div>
+    
+            <div id="right">
+                <a href="/<%= link %>" id="a_button_right"><%= logged_status %></a>
+                <div id="profile"></div>
+            </div>
+                
+        </div>
+
+    </div>
+
     <div id="container">
-
-        <div id="account_info">
-
-            <p id="username"><%= username %></p>
-            <a href="/<%= link %>" id="a_log"><%= logged_status %></a>
-            <div id="profile"></div>
-
-        </div>
-
-        <br>
-
-        <div id="namewagikam">
-            <h1>GIKAM</h1>
-        </div>
         
         <div id="create_post">
 
@@ -31,15 +36,9 @@
         </div>
 
         <div id="posts">
-            <!-- HERE ARE ADDED POSTS -->
         </div>
 
         <script>
-
-
-        // </div>
-
-        // <a href="/user/<%= user_profile %>" id="a_log">PROFILE</a>
 
             let last = 0
             let user_name = `<%= user_profile %>`
@@ -51,7 +50,7 @@
                     let node = document.createElement("a");
                     node.href = `/user/${user_name}`
                     node.innerHTML = 'PROFILE'
-                    node.id = 'a_log'
+                    node.id = 'a_button_right'
                     document.getElementById("profile").appendChild(node);
                 }
 
