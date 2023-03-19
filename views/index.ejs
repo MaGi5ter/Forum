@@ -5,7 +5,8 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style_main.css">
-    <title>Document</title>
+    <link rel="stylesheet" href="style_voting.css">
+    <title>GIKAM</title>
 </head>
 <body>
 
@@ -62,20 +63,45 @@
 
                     let node = document.createElement("div");
                     node.id = 'post'
-                    node.onclick = function () {
-                        location.replace(`/post/${element.id}`)
-                    }
+                    // node.onclick = function () {
+                    //         location.replace(`/post/${element.id}`)
+                    // }
 
                     node.innerHTML = `
-                        <h2>${element.title}</h2>
-                        <a href="/user/${element.author}" id="author_link">${element.author}</a>
-                        <p>${element.content}</p>
+
+                        <div id="voting">
+
+                            <div id="upvotebox" onclick="vote(1)">
+                                <div id="upvote""></div>
+                            </div>
+
+                            <div id="countbox">2323</div>
+
+                            <div id="downvotebox" onclick="vote(-1)">
+                                <div id="downvote"></div>   
+                            </div>
+  
+                        </div>
+
+                        <a href="/post/${element.id}"></a>
+
+                        <div>
+                            <a href="/post/${element.id}">
+                                <h2 id="post_link">${element.title}</h2>
+                            </a>
+                            <a href="/user/${element.author}" id="author_link">${element.author}</a>
+                            <p>${element.content}</p>
+                        </div>
                     `
 
                     document.getElementById("posts").appendChild(node);
 
-                    console.log(element)
+                    // console.log(element)
                 }
+            }
+
+            function redirect(link) {
+                location.replace(link)
             }
             
             function fetchposts(before) {

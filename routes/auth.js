@@ -21,11 +21,11 @@ router
             let login = req.body.login
             let password = req.body.password
             
-            if(login == '' || password == '') redirect_message("Login/Password can't be empty")
+            if(login == '' || password == '') {redirect_message("Login/Password can't be empty");return}
             
             password = sha256(password)
 
-            if(login.includes("'") || login.includes(";")) redirect_message("something went wrong")
+            if(login.includes("'") || login.includes(";")){redirect_message("something went wrong");return}
 
             let row = await dbquery(`SELECT * FROM users WHERE login = '${login}' AND password = '${password}'`)
 
@@ -36,7 +36,6 @@ router
                 req.session.loggedIn = true
                 req.session.username = login
                 //jacapraca
-
                 res.redirect('/')
 
             }

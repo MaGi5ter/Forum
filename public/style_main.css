@@ -90,13 +90,17 @@ a {
     padding-left: 10px;
     border-radius: 5px;
     border: solid 1px black;
-    cursor: pointer;
     overflow: hidden;
+    display: flex;
 }
 
 #post h2 {
     margin-top: 10px;
     margin-bottom: 5px;
+}
+
+#post_link{
+    cursor: pointer;
 }
 
 #post:hover {
@@ -109,4 +113,34 @@ a {
 
 #author_link:hover {
     text-decoration: underline;
+}
+
+#voting {
+    text-align: center;
+    /* margin-left: 5px; */
+    margin-top: 10px;
+    margin-right: 10px;
+}
+
+#upvotebox {
+    padding: 10px;
+    cursor: pointer;
+}
+
+#upvotebox:hover {
+    background-color: rgb(241, 241, 241);;
+}
+
+#countbox {
+    text-align: center;
+    padding: 10px;
+}
+
+#downvotebox {
+    padding: 10px;
+    cursor: pointer;
+}
+
+#downvotebox:hover {
+    background-color: rgb(241, 241, 241);;
 }

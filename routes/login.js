@@ -5,15 +5,20 @@ router
     .route("/")
     .get((req,res) => {
 
-        res.render('login', {
-            error_register : req.session.register_message,
-            error_login : req.session.login_message,
-            complete_register :req.session.register_complete_message,
-        })
-
-        req.session.login_message = ''
-        req.session.register_complete_message = ''
-        req.session.register_message = ''
+        if(req.session.loggedIn == true) {
+            res.redirect('/')
+        }
+        else {
+            res.render('login', {
+                error_register : req.session.register_message,
+                error_login : req.session.login_message,
+                complete_register :req.session.register_complete_message,
+            })
+    
+            req.session.login_message = ''
+            req.session.register_complete_message = ''
+            req.session.register_message = ''
+        }
 
 
     })
