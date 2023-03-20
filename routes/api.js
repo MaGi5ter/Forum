@@ -108,7 +108,7 @@ router
 
     })
     .post(async (req,res) => {
-        if(req.params.type = "comment") {
+        if(req.params.type == "comment") {
             if(req.session.loggedIn == true) {
 
                 data = req.body
@@ -145,6 +145,62 @@ router
                     console.log(await dbquery(sql,sql_parm))
 
                     res.send('COMMENT ADDED')
+
+                }
+            }
+            else res.send('verification failed')
+        }
+        else if(req.params.type == 'vote') {
+            if(req.session.loggedIn == true) {
+
+                console.log(req.session)
+
+                //it will respond with selected post comments
+                let vote = req.body.vote
+                let post = req.body.postID
+                let type = req.body.type // p - posts ; c - comment
+
+                if(vote == undefined || post == undefined || type == undefined) res.send('not full data')
+                else if(vote != -1 && vote != 1) res.send('bad vote')
+                else if(type != 'p' && type != 'c') res.send('bad type')
+                else {
+
+                    let username = req.session.username
+
+                    let votes = await dbquery('SELECT * FROM votes WHERE user = ? AND post = ? AND type = ?',[username,post,type])
+                    if(votes.length > 0) {
+                        if(votes[0].up_down == vote) {
+                            res.send('alredy voted')
+                            return 
+                        }else {
+                            let sql = `DELETE FROM votes WHERE user = ? AND post = ? AND type = ?`
+                            let sql_parm = [username,post,type]
+                            
+                            await dbquery(sql,sql_parm)
+                        }
+                    }
+
+                    let sql = `INSERT INTO votes (id,user,post,type,up_down) VALUES (NULL, ? ,? , ?, ?);`
+                    let sql_parm = [username,post,type,vote]
+                    
+                    await dbquery(sql,sql_parm)
+
+                    let sql1 = `SELECT * FROM posts WHERE id = ?;`
+                    let sql_parm1 = [post]
+
+                    let currnet_amount = await dbquery(sql1,sql_parm1)
+
+                    let current = currnet_amount[0].votes
+                    
+                    if(vote == -1) current -= 1
+                    else if(vote == 1) current += 1
+
+                    let sql2 = `UPDATE posts SET votes = ? WHERE id = ?;`
+                    let sql_parm2 = [current,post]
+                    
+                    await dbquery(sql2,sql_parm2)
+
+                    res.send("voted")
 
                 }
             }
