@@ -7,7 +7,7 @@ Login / Register System -- DONE
 
 Creating Posts -- DONE
 
-Voting on Posts by users
+Voting on Posts by users -- DONE
 
 Comments on posts - DONE
 
