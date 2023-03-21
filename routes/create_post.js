@@ -47,7 +47,7 @@ router
             if(id.length > 0) {
 
                 console.log(id)
-                let sql = `INSERT INTO posts (ID, authorID,author, createdtimestamp, content, title) VALUES (NULL, ? ,? , ?, ?, ?);`
+                let sql = `INSERT INTO posts (ID, authorID,author, createdAt, content, title) VALUES (NULL, ? ,? , ?, ?, ?);`
                 let sql_parm = [id[0].ID, req.session.username, Date.now(), content , title]
 
 

@@ -25,7 +25,31 @@ router
             else {
                 let sql = `SELECT * FROM posts WHERE createdAt < ? ORDER BY createdAt DESC LIMIT 50`
                 let sql_parm = [req.query.before]
-                res.send(await dbquery(sql , sql_parm))
+
+                if(req.session.loggedIn == true) {
+
+                    let posts = await dbquery(sql , sql_parm)
+                    let posts_id = []
+
+                    for (let index = 0; index < posts.length; index++) {
+                        const element = posts[index];
+
+                        posts_id.push(element.id)
+                    }
+
+                    let sql1 = `SELECT post,type,up_down FROM votes WHERE post in (${posts_id.toString()}) AND user = ?;`
+                    let sql1_param = [req.session.username]
+
+                    let votes = await dbquery(sql1,sql1_param)
+
+                    // console.log(votes)
+
+                    res.send([posts,votes])
+
+
+                } else {
+                    res.send([await dbquery(sql , sql_parm)])
+                }
             }
 
         }
@@ -166,6 +190,7 @@ router
                 else {
 
                     let username = req.session.username
+                    let repair = 0 //used when sb change his mind
 
                     let votes = await dbquery('SELECT * FROM votes WHERE user = ? AND post = ? AND type = ?',[username,post,type])
                     if(votes.length > 0) {
@@ -175,6 +200,10 @@ router
                         }else {
                             let sql = `DELETE FROM votes WHERE user = ? AND post = ? AND type = ?`
                             let sql_parm = [username,post,type]
+
+                            repair = repair + vote
+
+                            console.log(repair)
                             
                             await dbquery(sql,sql_parm)
                         }
@@ -191,16 +220,22 @@ router
                     let currnet_amount = await dbquery(sql1,sql_parm1)
 
                     let current = currnet_amount[0].votes
+
+                    if(vote == -1) current = current - 1 + repair
+                    else if(vote == 1) current = current + 1 + repair
                     
-                    if(vote == -1) current -= 1
-                    else if(vote == 1) current += 1
+
+                    console.log(current)
 
                     let sql2 = `UPDATE posts SET votes = ? WHERE id = ?;`
                     let sql_parm2 = [current,post]
                     
                     await dbquery(sql2,sql_parm2)
 
-                    res.send("voted")
+                    res.send({
+                        final: 'voted',
+                        current: current
+                    })
 
                 }
             }
