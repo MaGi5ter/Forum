@@ -17,6 +17,10 @@ async function start() {
         // console.log(element)
         let node = document.createElement("div");
         node.id = 'post'
+        // node.onclick = function (event) {
+        //     event.stopPropagation();
+        //     location.replace(`/post/${element.id}`)
+        // }
         // orangered
         node.innerHTML = `
 
@@ -34,15 +38,15 @@ async function start() {
 
             </div>
 
-            <a href="/post/${element.id}"></a>
-
-            <div>
-                <a href="/post/${element.id}">
-                    <h2 id="post_link">${element.title}</h2>
-                </a>
+            <div onclick="redirect('/post/${element.id}')">
+                
+                <h2 id="post_link">${element.title}</h2>
+                
                 <a href="/user/${element.author}" id="author_link">${element.author}</a>
-                <p>${element.content}</p>
+                <div id='post_content'>${element.content}</div>
             </div>
+
+            <div id="makeit" onclick="redirect('/post/${element.id}')"></div>
         `
 
         document.getElementById("posts").appendChild(node);
@@ -104,6 +108,14 @@ async function vote(up_or_down,post_id) {
             document.getElementsByClassName(`${post_id}_votes`)[0].innerHTML = response.current
             
         }
+        else if (response.final == "vote_deleted" ){
+            document.getElementsByClassName(`${post_id}_votes`)[0].innerHTML = response.current
+            let downvote = document.getElementsByClassName(`${post_id}_down`)[0]
+            console.log(downvote)
+            downvote.classList.value = `${post_id}_down downvote_white downvote_white1`
+            let upvote = document.getElementsByClassName(`${post_id}_up`)[0]
+            upvote.classList.value = `${post_id}_up upvote_white upvote_white1`
+        }
     })
 }
 
@@ -133,7 +145,7 @@ function fetchposts(before) {
     return new Promise((resolve,reject) => {
         console.log(before)
 
-    fetch(`/api/posts?before=${before}`, {
+    fetch(`/api/posts?before=${before}&type=p`, {
         method: 'GET',
         headers: {
             'Accept': 'application/json',
@@ -145,3 +157,9 @@ function fetchposts(before) {
         });
     })
 }
+
+document.querySelector('div').addEventListener('click', function(event) {
+    if (event.target.tagName.toLowerCase() === 'a') {
+      event.stopPropagation();
+    }
+  });

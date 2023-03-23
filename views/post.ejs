@@ -5,6 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/style_post.css"  type="text/css">
+    <link rel="stylesheet" href="/style_voting.css">
     <title>GIKAM</title>
 </head>
 <body>
@@ -32,12 +33,26 @@
 
         <div id="container_navbar">
 
+            <div id="voting">
+
+                <div id="upvotebox" onclick="vote(1,'<%= post.id %>','p')">
+                    <div id="upvote" class="<%= post.id %>title_up upvote_white upvote_white1"></div>
+                </div>
+
+                <div id="countbox" class="<%= post.id %>_votes" ><%= post.votes %></div>
+
+                <div id="downvotebox" onclick="vote(-1,'<%= post.id %>','p')">
+                    <div id="downvote" class="<%= post.id %>title_down downvote_white downvote_white1" ></div>   
+                </div>
+
+            </div>
+
             <h1 id="post_title"><%= post.title %></h1>
             <p id="author_p">by: <a id="author_link" href="/user/<%= post.author %>"><%= post.author %></a></p>
 
         </div>
 
-        <p id="post_content"><%= post.content %></p>
+        <div id="post_content"><%= post.content %></div>
 
     </div>
 
@@ -66,190 +81,30 @@
     <script>
 
         let user_name = `<%= user_profile %>`
+        let post_id = `<%= post.id %>`
 
-        start()
-        async function start() {
+        let voted = '<%= voted %>'
 
-            if(user_name != ``) {
-                let node = document.createElement("a");
-                node.href = `/user/${user_name}`
-                node.innerHTML = 'PROFILE'
-                node.id = 'a_button_right'
-                document.getElementById("profile").appendChild(node);
+        if(voted != 0) {
+            if(voted== -1) {
+                let downvote = document.getElementsByClassName(`${post_id}title_down`)[0]
+                console.log(downvote)
+                downvote.classList.value = `${post_id}title_down downvote_orangered downvote_orangered1`
+                // console.log(downvote.classList)
+                let upvote = document.getElementsByClassName(`${post_id}title_up`)[0]
+                upvote.classList.value = `${post_id}title_up upvote_white upvote_white1`
             }
-
-            loadcomments()
-
-        }
-
-        async function loadcomments() {
-            let comments = await fetchdata(`/api/comments?post=<%= post.id %>`)
-
-            for (let index = 0; index < comments.length; index++) {
-                const element = comments[index];
-                
-                let node = document.createElement("div");
-                node.id = 'comment'
-                node.className = `${element.id}`
-                // node.onclick = function () {
-                //     location.replace(`/post/${element.id}`)
-                // }
-
-                node.innerHTML = `
-
-                    <div id="nav_com">
-                        <div id="conte">
-                            <h3><a id="author_link" href="/user/${element.author}">${element.author}</a></h3>
-                        </div>
-                        <div id="replybutton" onclick="reply_textarea(${element.id})"><p>reply</p></div>
-                    </div>
-
-                    <div id="conte">
-                    <p>${element.content}</p>
-                    </div>
-                    <div id="${element.id}"></div>
-                    <div id="${element.id}_replies" class="replie"></div>
-
-                `
-
-                document.getElementById("comments").appendChild(node);
-
-                await replies(element.id)
+            else if (voted == 1) {
+                let upvote = document.getElementsByClassName(`${post_id}title_up`)[0]
+                upvote.classList.value = `${post_id}title_up upvote_orangered upvote_orangered1`
+                let downvote = document.getElementsByClassName(`${post_id}title_down`)[0]
+                console.log(downvote)
+                downvote.classList.value = `${post_id}title_down downvote_white downvote_white1`
             }
-
-            async function replies(id){
-                await fetchdata(`/api/replies?comment=${id}`).then(async (repli) => {
-                    if(repli.length > 0) {
-                        for (let index = 0; index < repli.length; index++) {
-                            const element = repli[index];
-
-                            let node = document.createElement("div");
-
-                            node.innerHTML = `
-                                <div id="nav_com">
-                                <div id="conte">
-                                    <h3><a id="author_link" href="/user/${element.author}">${element.author}</a></h3>
-                                </div>
-                                <div id="replybutton" onclick="reply_textarea(${element.id})"><p>reply</p></div>
-                            </div>
-
-                            <div id="conte">
-                            <p>${element.content}</p>
-                            </div>
-                            <div id="${element.id}"></div>
-                            <div id="${element.id}_replies" class="replie"></div>
-                            
-                            `
-
-                            document.getElementById(`${id}_replies`).appendChild(node)
-
-                            await replies(element.id)
-                        }
-                    }
-                    else {
-                        return
-                    }
-                })
-            }
-
-        }
-
-        async function reply_textarea(id) {
-
-            if(`<%= user_profile %>` != "") {
-                document.getElementById(id).innerHTML = `
-            
-                <div id="${id}form">
-
-                <textarea id="reply_content" class="${id}_reply"></textarea>
-
-                <div id="justflex"> 
-                    <p id="submitreply" onclick="uploadreply(${id})">REPLY</p>
-                    <p id="closetextare" onclick="closearea(${id})">X</p>
-                </div>
-                    
-                </div>
-            
-            `
-            } else {
-                document.getElementById('ifloggedaddcomment').innerHTML = `
-                 <h2>You need to be logged to comment</h2>
-                `
-                setTimeout(() => {
-                    document.getElementById('ifloggedaddcomment').innerHTML = ""
-                }, 4000);
-            }
-
-        }
-
-        async function closearea(id) {
-            document.getElementById(id).innerHTML = ''
-        }
-
-        async function uploadreply(id){
-            let data = document.getElementsByClassName(`${id}_reply`)[0].value
-
-            console.log(data)
-            // console.log(document.getElementsByClassName(`${id}_reply`))
-            await postData('/api/comment',{
-                content : data,
-                postID: `<%= post.id %>`,
-                reply: id,
-            }).then((response) => {
-                if(response == 'COMMENT ADDED') {
-                    document.getElementById('comments').innerHTML = ''
-                    loadcomments()
-                }
-            })
-        }
-
-        async function uploadcomment() {
-            let data = document.getElementById('comment_content').value
-            await postData('/api/comment',{
-                content : data,
-                postID: `<%= post.id %>`,
-                reply: null,
-            }).then((response) => {
-                if(response == 'COMMENT ADDED') {
-                    document.getElementById('comments').innerHTML = ''
-                    loadcomments()
-                }
-            })
-        }
-
-        function postData(url = "",data = {}) {
-            return new Promise((resolve, reject) => {
-                data = JSON.stringify(data)
-                let xhr = new XMLHttpRequest();
-                xhr.open("POST", url);
-                xhr.setRequestHeader("Accept", "application/json");
-                xhr.setRequestHeader("Content-Type", "application/json");
-
-                xhr.onreadystatechange = function () {
-                if (xhr.readyState === 4) {
-                    console.log(xhr.status);
-                    console.log(xhr.responseText);
-                    resolve(xhr.responseText)
-                }};
-                xhr.send(data);
-            })
-        }
-
-        function fetchdata(url) {
-            return new Promise((resolve,reject) => {
-            fetch(url, {
-                method: 'GET',
-                headers: {
-                    'Accept': 'application/json',
-                },
-            }).then(response => {
-                return response.text();
-                }).then(function(data) {
-                    resolve(JSON.parse(data)); 
-                });
-            })
         }
 
     </script>
+    <script src="/post.js"></script>
+
 </body>
 </html>

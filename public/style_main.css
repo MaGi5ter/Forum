@@ -105,6 +105,7 @@ a {
 
 #post:hover {
     background-color: rgb(218, 216, 216);
+    cursor: pointer;
 }
 
 #author_link {
@@ -143,4 +144,14 @@ a {
 
 #downvotebox:hover {
     background-color: rgb(241, 241, 241);;
+}
+
+#post_content {
+    margin-top: 10px;
+    white-space: pre-wrap;
+    margin-bottom: 20px;
+}
+
+#makeit {
+    width: 100%;
 }

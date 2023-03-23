@@ -5,6 +5,40 @@ body {
     overflow-x: hidden;
 }
 
+#voting {
+    margin-top: 10px;
+    margin-left: 10px;
+    margin-right: 10px;
+    text-align: center;
+}
+
+#upvotebox {
+    margin: 8px;
+}
+#downvotebox {
+    margin: 8px;
+}
+#upvotebox {
+    cursor: pointer;
+}
+
+#upvotebox:hover {
+    background-color: rgb(241, 241, 241);;
+}
+
+#countbox {
+    text-align: center;
+}
+
+#downvotebox {
+    cursor: pointer;
+}
+
+#downvotebox:hover {
+    background-color: rgb(241, 241, 241);;
+}
+
+
 a {
     all: unset;
 }
@@ -71,10 +105,6 @@ a {
     display: flex;
 }
 
-#post_title {
-    margin-left: 50px;
-}
-
 #post_content {
     margin-left: 40px;
     margin-right: 40px;
@@ -136,6 +166,7 @@ a {
     margin-right: auto;
     margin-top: 20px;
     border-radius: 5px;
+    overflow: hidden;
 }
 
 #comment {
@@ -152,12 +183,12 @@ a {
 }
 
 #conte {
-    margin-left: 10px;
+    margin-top: 10px;
 }
 
 #conte p {
-    margin-top: 0px;
-    margin-left: 10px;
+    margin-top: -28px;
+    margin-left: 50px;
 }
 
 #nav_com {
@@ -165,7 +196,7 @@ a {
 }
 
 #replybutton {
-    margin-top: 22px;
+    margin-top: 32px;
     border-radius: 5px;
     margin-left: 10px;
     width: 35px;
@@ -227,4 +258,13 @@ a {
 #submitreply:hover {
     background-color: rgb(174, 221, 120);
     cursor: pointer;
+}
+
+#post_content {
+    margin-top: -10px;
+    white-space: pre-wrap;
+    margin-bottom: 20px;
+    padding-left: 10px;
+    padding-right: 10px;
+    overflow: auto;
 }

@@ -18,6 +18,7 @@ router
             //https://discord.com/api/v9/channels/684116498070896721/messages?before=1082416576982155335&limit=50
             
             let before = req.query.before
+            let votes_type = req.query.type
 
             console.log(Date.now())
             
@@ -37,8 +38,8 @@ router
                         posts_id.push(element.id)
                     }
 
-                    let sql1 = `SELECT post,type,up_down FROM votes WHERE post in (${posts_id.toString()}) AND user = ?;`
-                    let sql1_param = [req.session.username]
+                    let sql1 = `SELECT post,type,up_down FROM votes WHERE post in (${posts_id.toString()}) AND user = ? AND type = ?;`
+                    let sql1_param = [req.session.username,votes_type]
 
                     let votes = await dbquery(sql1,sql1_param)
 
@@ -68,34 +69,71 @@ router
                 res.send(user_activity)
             }
         }
+        // else if(req.params.type == 'comments') {
+
+        //     //it will respond with selected post comments
+
+        //     let post = req.query.post
+        //     if(post == undefined) res.send('nothin')
+        //     else {
+        //         let sql = `SELECT * FROM comments WHERE postID = ? AND replyID IS NULL ORDER BY createdAt DESC LIMIT 50`
+        //         let sql_parm = [post]
+
+        //         let post_comment = await dbquery(sql,sql_parm)
+
+        //         res.send(post_comment)
+        //     }
+        // }
         else if(req.params.type == 'comments') {
 
             //it will respond with selected post comments
 
-            let post = req.query.post
-            if(post == undefined) res.send('nothin')
-            else {
-                let sql = `SELECT * FROM comments WHERE postID = ? AND replyID IS NULL ORDER BY createdAt DESC LIMIT 50`
-                let sql_parm = [post]
-
-                let post_comment = await dbquery(sql,sql_parm)
-
-                res.send(post_comment)
-            }
-        }
-        else if(req.params.type == 'replies') {
-
-            //it will respond with selected post comments
-
-            let comment = req.query.comment
+            let comment = req.query.post
             if(comment == undefined) res.send('nothin')
             else {
-                let sql = `SELECT * FROM comments WHERE replyID = ? ORDER BY createdAt DESC LIMIT 50`
-                let sql_parm = [comment]
 
+                //I LOVE CHATGPT FOR THAT PIECE OF QUERY IT MAKES IT SO MUCH FASTER
+
+                let sql = `
+                WITH RECURSIVE comment_tree AS (
+                    SELECT id, replyID, content, author, votes
+                    FROM comments
+                    WHERE replyID IS NULL AND postID = ?
+                  
+                    UNION ALL
+                  
+                    SELECT c.id, c.replyID, c.content, c.author, c.votes
+                    FROM comments c
+                    JOIN comment_tree ct ON c.replyID = ct.id
+                  )
+                  
+                  SELECT * FROM comment_tree;
+                
+                `
+
+                let sql_parm = [comment]
                 let comment_replies = await dbquery(sql,sql_parm)
 
-                res.send(comment_replies)
+                console.log(comment_replies)
+
+                if(req.session.loggedIn == true && comment_replies.length > 0) {
+
+                    let user_comments_id = []
+
+                    for (let index = 0; index < comment_replies.length; index++) {
+                        const element = comment_replies[index];
+                        
+                        user_comments_id.push(element.id)
+                    }
+
+                    let sql1 = `SELECT post,type,up_down FROM votes WHERE post in (${user_comments_id.toString()}) AND user = ? AND type = 'c';`
+                    let sql1_param = [req.session.username]
+
+                    let votes = await dbquery(sql1,sql1_param)
+
+                    res.send([comment_replies,votes])
+
+                } else  res.send([comment_replies])
             }
         }
         else if(req.params.type == 'usercomments') {
@@ -120,6 +158,7 @@ router
             let post_id = req.query.id
             if(post_id == undefined) res.send('nothin')
             else {
+                
                 let sql = `SELECT * FROM posts WHERE id = ? LIMIT 50`
                 let sql_parm = [post_id]
 
@@ -136,11 +175,10 @@ router
             if(req.session.loggedIn == true) {
 
                 data = req.body
-                console.log(data)
 
                 let post = await dbquery(`SELECT * FROM posts WHERE id = ?`,[data.postID])
 
-                console.log(post)
+                // console.log(post)
 
                 if(data.content == '' || data.content == undefined ) res.send('EMPTY CONTENT')
                 else if(data.content.length > 5000) res.send('Meassage too long')
@@ -181,21 +219,51 @@ router
 
                 //it will respond with selected post comments
                 let vote = req.body.vote
-                let post = req.body.postID
+                let post = req.body.postID //it's named posts but it also is used when there are comments votes
                 let type = req.body.type // p - posts ; c - comment
+
+                console.log([vote,post,type])
 
                 if(vote == undefined || post == undefined || type == undefined) res.send('not full data')
                 else if(vote != -1 && vote != 1) res.send('bad vote')
                 else if(type != 'p' && type != 'c') res.send('bad type')
                 else {
 
+                    // I WILL NEED TO MAKE SOME BETTER SQL QUERIES HERE BCS THERE IS TOO MUCH OF THEM
+
                     let username = req.session.username
-                    let repair = 0 //used when sb change his mind
+                    let repair = 0 //used when sb change his mind and votes to opposite
 
                     let votes = await dbquery('SELECT * FROM votes WHERE user = ? AND post = ? AND type = ?',[username,post,type])
                     if(votes.length > 0) {
                         if(votes[0].up_down == vote) {
-                            res.send('alredy voted')
+
+                            let sql = `DELETE FROM votes WHERE user = ? AND post = ? AND type = ?`
+                            let sql_parm = [username,post,type]
+
+                            dbquery(sql,sql_parm)  //DELETES VOTE FROM DB
+
+                            let sql1 = ''
+                            if(type == 'p') sql1 = `SELECT * FROM posts WHERE id = ?;`
+                            else if(type == 'c') sql1 = `SELECT * FROM comments WHERE id = ?;`
+
+                            let sql_parm1 = [post]
+                            let currnet_amount = await dbquery(sql1,sql_parm1) //requests current amount of votes in post
+        
+                            let current = currnet_amount[0].votes - vote
+
+
+                            let sql2
+                            if(type == 'p') sql2 = `UPDATE posts SET votes = ? WHERE id = ?;`
+                            else if(type == 'c') sql2 = `UPDATE comments SET votes = ? WHERE id = ?;`
+                            let sql_parm2 = [current,post]
+                            
+                            await dbquery(sql2,sql_parm2)
+
+                            res.send({
+                                final: 'vote_deleted',
+                                current: current
+                            })
                             return 
                         }else {
                             let sql = `DELETE FROM votes WHERE user = ? AND post = ? AND type = ?`
@@ -209,28 +277,36 @@ router
                         }
                     }
 
-                    let sql = `INSERT INTO votes (id,user,post,type,up_down) VALUES (NULL, ? ,? , ?, ?);`
-                    let sql_parm = [username,post,type,vote]
-                    
-                    await dbquery(sql,sql_parm)
-
-                    let sql1 = `SELECT * FROM posts WHERE id = ?;`
+                    let sql1 = ''
+                    if(type == 'p') sql1 = `SELECT * FROM posts WHERE id = ?;`
+                    else if(type == 'c') sql1 = `SELECT * FROM comments WHERE id = ?;`
+                    // let sql1 = `SELECT * FROM posts WHERE id = ?;`
                     let sql_parm1 = [post]
 
                     let currnet_amount = await dbquery(sql1,sql_parm1)
-
+                    // console.log(currnet_amount,sql1)
                     let current = currnet_amount[0].votes
 
                     if(vote == -1) current = current - 1 + repair
                     else if(vote == 1) current = current + 1 + repair
                     
-
                     console.log(current)
 
-                    let sql2 = `UPDATE posts SET votes = ? WHERE id = ?;`
+                    ////////
+
+                    let sql2
+                    if(type == 'p') sql2 = `UPDATE posts SET votes = ? WHERE id = ?;`
+                    else if(type == 'c') sql2 = `UPDATE comments SET votes = ? WHERE id = ?;`
+
+                    // console.log(sql2)
                     let sql_parm2 = [current,post]
-                    
                     await dbquery(sql2,sql_parm2)
+
+                    /////////
+
+                    let sql = `INSERT INTO votes (id,user,post,type,up_down) VALUES (NULL, ? ,? , ?, ?);`
+                    let sql_parm = [username,post,type,vote]
+                    await dbquery(sql,sql_parm)
 
                     res.send({
                         final: 'voted',
