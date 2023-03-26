@@ -3,6 +3,7 @@ body {
     height: 100%;
     margin: 0;
     overflow-x: hidden;
+    background-color: #030303;
 }
 
 a {
@@ -12,6 +13,7 @@ a {
 #navbar_top {
     width: 100%;
     border: solid 1px black;
+    background-color: rgb(26 26 27);
 }
 
 #navbar {
@@ -26,6 +28,7 @@ a {
 #left {
     display: flex;
     margin-left: 50px;
+    color: white;
 }
 
 #left:hover{
@@ -35,6 +38,7 @@ a {
 #right {
     display: flex;
     margin-right: 50px;
+    color: white;
 }
 
 #a_button_right {
@@ -42,7 +46,7 @@ a {
     margin: 15px;
     padding: 5px;
     border-radius: 5px;
-    border: solid 1px black;
+    border: solid 1px rgb(255, 255, 255);
 }
 
 #a_button_right:hover {
@@ -51,6 +55,7 @@ a {
 }
 
 #container {
+    color: white;
     margin-top: 40px;
     width: 900px;
     margin-left: auto;
@@ -62,18 +67,19 @@ a {
 #create_post {
     margin-left: auto;
     margin-right: auto;
-    width: 400px;
+    width: 775px;
     margin-top: 20px;
     border: solid 1px black;
     text-align: center;
     cursor: pointer;
     border-radius: 5px;
     font-family: 'Courier New', Courier, monospace;
-    padding: 5px;
+    padding: 10px;
 }
 
 #create_post:hover {
     background-color: rgb(110, 209, 110);
+    color: #030303;
 }
 
 #posts {
@@ -86,12 +92,13 @@ a {
 }
 
 #post {
+    background-color: rgb(26 26 27);
     margin-top: 20px;
-    padding-left: 10px;
-    border-radius: 5px;
+    border-radius: 10px;
     border: solid 1px black;
     overflow: hidden;
     display: flex;
+    max-height: 600px;
 }
 
 #post h2 {
@@ -104,7 +111,7 @@ a {
 }
 
 #post:hover {
-    background-color: rgb(218, 216, 216);
+    border: 2px solid white;
     cursor: pointer;
 }
 
@@ -129,7 +136,7 @@ a {
 }
 
 #upvotebox:hover {
-    background-color: rgb(241, 241, 241);;
+    background-color: rgb(48, 47, 47);
 }
 
 #countbox {
@@ -143,7 +150,7 @@ a {
 }
 
 #downvotebox:hover {
-    background-color: rgb(241, 241, 241);;
+    background-color: rgb(48, 47, 47);
 }
 
 #post_content {
@@ -154,4 +161,51 @@ a {
 
 #makeit {
     width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+#title {
+    margin-top: 7px;
+}
+
+/* .spoiler {
+    color: rgb(170, 120, 26);
+    text-shadow: 4px 2px 2px #000, -2px -1px 0 #000, 1px -4px 2px #000, -1px 1px 0 #000;
+} */
+
+span.spoiler {
+    color: transparent;
+    padding: 0 4px;
+    background-color: rgb(190, 141, 34);
+}
+  
+span.spoiler:hover {
+    color: white;
+    background-color: initial;
+}
+
+span.nsfw {
+    color: transparent;
+    padding: 0 4px;
+    background-color: rgb(180, 64, 34);
+}
+  
+span.nsfw:hover {
+    color: white;
+    background-color: initial;
+}
+
+#image {
+    margin-top: 10px;
+    filter: none;
+}
+
+#image img{
+    max-width: 745px;
+    padding-right: 7px;
+}
+
+.blur {
+    filter: blur(9px);
 }

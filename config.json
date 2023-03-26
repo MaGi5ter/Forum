@@ -1,7 +1,10 @@
 {
-    "db_username": "73",
-    "db_databse": "db3",
-    "db_password":"A81c",
-    "db_server": "us",
-    "secret": "KINDNNY"
+    "db_username": "e673",
+    "db_databse": "db_673",
+    "db_password":"A89eeec",
+    "db_server": "mkr.us",
+    "secret": "KINDNNY",
+    "your_domain": "http://localhost:40387",
+    "discord_bot": "OTQ0bbjYspQ7GPfVCZPQ3ROhluo",
+    "channel":"100002415728"
 }

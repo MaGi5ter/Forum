@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/style_post.css"  type="text/css">
     <link rel="stylesheet" href="/style_voting.css">
+    <script defer src="/post.js"></script>
     <title>GIKAM</title>
 </head>
 <body>
@@ -47,12 +48,18 @@
 
             </div>
 
-            <h1 id="post_title"><%= post.title %></h1>
-            <p id="author_p">by: <a id="author_link" href="/user/<%= post.author %>"><%= post.author %></a></p>
+            <script>
+
+               
+
+            </script>
+
+            <!-- <h1 id="post_title"><%= post.title %></h1>
+            <p id="author_p">by: <a id="author_link" href="/user/<%= post.author %>"><%= post.author %></a></p> -->
 
         </div>
 
-        <div id="post_content"><%= post.content %></div>
+        <!-- <div id="post_content"><%= post.content %></div> -->
 
     </div>
 
@@ -68,6 +75,13 @@
                 <p id="submit" onclick="uploadcomment()">COMMENT</p>
             </div>
             `
+            let comment_area = document.getElementById('comment_content')
+
+            comment_area.addEventListener('input', (event) => {
+                comment_area.style.height ='auto'
+                comment_area.style.height = `${comment_area.scrollHeight - 37}px`;
+            }, false);
+
         }
 
     </script>
@@ -104,7 +118,6 @@
         }
 
     </script>
-    <script src="/post.js"></script>
 
 </body>
 </html>

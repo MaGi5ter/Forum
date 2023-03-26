@@ -3,6 +3,13 @@
 const express = require('express')
 const router = express.Router()
 let db = require('../mysql')  
+const bodyParser = require('body-parser');
+
+const jsonParser = bodyParser.json({ limit: '50mb' });
+const urlencodedParser = bodyParser.urlencoded({ extended: true, limit: '50mb' });
+
+router.use(jsonParser);
+router.use(urlencodedParser);
 
 // Since the hyphen (-) and the dot (.) are interpreted literally,
 // they can be used along with route parameters for useful purposes.
@@ -22,7 +29,7 @@ router
 
             console.log(Date.now())
             
-            if(before == undefined) res.send('nothin')
+            if(before == undefined || votes_type == undefined) res.send('nothin')
             else {
                 let sql = `SELECT * FROM posts WHERE createdAt < ? ORDER BY createdAt DESC LIMIT 50`
                 let sql_parm = [req.query.before]
@@ -56,17 +63,38 @@ router
         }
         else if(req.params.type == 'activity') {
 
-            //it will respond with selected user every activity
+            //it will respond with selected user every activity // posts only
 
             let author = req.query.user
             if(author == undefined) res.send('nothin')
             else {
                 let sql = `SELECT * FROM posts WHERE author = ? ORDER BY createdAt DESC LIMIT 50`
                 let sql_parm = [author]
-
                 let user_activity = await dbquery(sql,sql_parm)
 
-                res.send(user_activity)
+                if(req.session.loggedIn == true) {
+
+                    let posts_id = []
+
+                    for (let index = 0; index < user_activity.length; index++) {
+                        const element = user_activity[index];
+
+                        posts_id.push(element.id)
+                    }
+
+                    let sql1 = `SELECT post,type,up_down FROM votes WHERE post in (${posts_id.toString()}) AND user = ? AND type = ?;`
+                    let sql1_param = [req.session.username,'p']
+
+                    let votes = await dbquery(sql1,sql1_param)
+
+                    // console.log(votes)
+
+                    res.send([user_activity,votes])
+
+
+                } else {
+                    res.send([user_activity])
+                }
             }
         }
         // else if(req.params.type == 'comments') {
@@ -143,23 +171,41 @@ router
             let user_overview = req.query.user
             if(user_overview == undefined) res.send('nothin')
             else {
-                let sql = `SELECT * FROM comments WHERE author = ? ORDER BY createdAt DESC LIMIT 50`
+                let sql = `
+                SELECT comments.postId, comments.createdAt ,comments.content, posts.content AS postContent, posts.author
+                FROM comments
+                JOIN posts ON comments.postId = posts.id
+                WHERE comments.author = ?
+                ORDER BY comments.createdAt DESC
+                LIMIT 50`
+
                 let sql_parm = [user_overview]
 
                 let user_comments = await dbquery(sql,sql_parm)
 
-                res.send(user_comments)
+                let respond_data = []
+
+                for (let index = 0; index < user_comments.length; index++) {
+                    const element = user_comments[index];
+
+                    element.postTitle = JSON.parse(element.postContent)[0].content
+                    element.postContent = undefined
+
+                    respond_data.push(element)
+                }
+
+                res.send(respond_data)
             }
         }
         else if(req.params.type == 'post_data') {
 
-            //it will respond with selected post comments
+            //it will respond with selected post data
 
             let post_id = req.query.id
             if(post_id == undefined) res.send('nothin')
             else {
-                
-                let sql = `SELECT * FROM posts WHERE id = ? LIMIT 50`
+
+                let sql = `SELECT * FROM posts WHERE id = ?`
                 let sql_parm = [post_id]
 
                 let post_data = await dbquery(sql,sql_parm)
@@ -317,6 +363,164 @@ router
             }
             else res.send('verification failed')
         }
+        else if(req.params.type == 'post') {
+
+            if(req.session.loggedIn == true) {
+                let post_data = req.body
+                let total_length = 0
+
+                let approved_data = []
+
+                let checks = {
+                    title: false,
+                    text_or_image:false,
+                    accepted_total:false 
+                }
+
+                let breaked = false
+
+                // console.log(post_data)
+
+                for (let index = 0; index < post_data.length; index++) {
+                    const element = post_data[index];
+
+                    // console.log(element)
+                    
+                    if(element.type == 'title') {
+                        if(element.content.length > 0 && element.content.length <= 300) {
+                            if (element.content.trim() === '') {
+                                res.send({error: "incorrect title"})
+                                breaked = true
+                                break
+                            }
+                            else {
+                                approved_data.push(element)
+                                checks.title = true
+                            }
+                        }
+                        else {
+                            res.send({error: "incorrect title length"})
+                            breaked = true
+                            break
+                        }
+                    }
+                    else if(element.type == 'text') {
+                        if(element.spoiler == false || element.spoiler == true) { //to prevent from some weird data being put here
+                            if(element.nsfw == true || element.nsfw == false) {
+                                if(element.content.length > 0) {
+                                    if(element.content.includes('<')) {
+                                        res.send({error: "You can't use some symbols"})
+                                        breaked = true
+                                        break
+                                    }
+                                    else {
+                                        total_length += element.content.length
+                                        approved_data.push(element)
+                                        checks.text_or_image = true
+                                    }
+                                }
+                                else {
+                                    res.send({error: "text field cannot be empty"})
+                                    breaked = true
+                                    break
+                                }
+                            } else {
+                                res.send({error: "weird data provided"})
+                                breaked = true
+                                break
+                            }
+                        }
+                        else {
+                            res.send({error: "weird data provided"})
+                            breaked = true
+                            break
+                        }
+                    }
+                    else if(element.type == 'image') {
+                        if(element.spoiler == false || element.spoiler == true) { //to prevent from some weird data being put here
+                            if(element.nsfw == true || element.nsfw == false) {
+                                
+                                const maxSize = 8343552
+
+                                function isBlobTooBig(blob) {
+                                    return blob.size > maxSize;
+                                }
+
+                                if(isBlobTooBig(element.image)) {
+                                    res.send({error: "Image too big"})
+                                    breaked = true
+                                    break
+                                }
+                                else {
+                                    approved_data.push(element)
+                                    checks.text_or_image = true
+                                }
+                            } else {
+                                res.send({error: "weird data provided"})
+                                breaked = true
+                                break
+                            }
+                        }
+                        else {
+                            res.send({error: "weird data provided"})
+                            breaked = true
+                            break
+                        }
+                    }
+                }
+
+                if(breaked == true) return
+
+                if(approved_data.length != post_data.length) {
+                    res.send({error: "Your post had issue"})
+                }
+                else if (total_length > 8000) {
+                    res.send({error: "Your post text was too long"})
+                }
+                else {  //here data provided by user is accepted
+
+                    let finall_data = []
+
+                    for (let index = 0; index < approved_data.length; index++) {
+                        let element = approved_data[index];
+                        if(element.type == 'image') {
+                            let base64 = element.image
+                            const image = new Buffer.from(base64.split(",")[1], "base64");
+                            let uploader = require('../uploader')
+                            let url = await uploader(image)
+                            element.image = url
+                            finall_data.push(element)
+                        }
+                        else finall_data.push(element)
+                    }
+
+                    let data_to_db = JSON.stringify(finall_data)
+
+                    console.log(finall_data)
+                    console.log(req.session.username)
+
+                    let getIDsql = `SELECT ID FROM users WHERE token = ?`
+                    let sql_parm = [req.session.token[0].token]
+
+                    let id = await dbquery(getIDsql,sql_parm)
+
+                    if(id.length > 0) {
+                        console.log(id)
+                        let sql = `INSERT INTO posts (ID, authorID, author,               createdAt,  content) VALUES (NULL, ? ,? , ?, ?);`
+                        let sql_parm =              [     id[0].ID, req.session.username, Date.now(), data_to_db ,]
+
+
+                        console.log(req.session)
+                        console.log(await dbquery(sql,sql_parm))
+
+                        await sleep(500)
+                        res.send('redirect')
+                    }
+
+                }
+            }
+            else res.send({error: "Authorize"})
+        }
     })
 
 module.exports = router
@@ -330,3 +534,7 @@ function dbquery(prompt,variables) {
         })
     })
 }
+
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }

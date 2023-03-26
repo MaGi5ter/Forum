@@ -1,21 +1,148 @@
 start()
 async function start() {
+    overview_load()
+}
 
-    if(user_name != ``) {
-        let node = document.createElement("a");
-        node.href = `/user/${user_name}`
-        node.innerHTML = 'PROFILE'
-        node.id = 'a_button_right'
-        document.getElementById("profile").appendChild(node);
+async function overview_load() {
+
+    document.getElementById("overview").innerHTML = ''
+
+    // let user = user;
+    let posts = await fetchdata(`/api/activity?user=${user}`)
+    let comments = await fetchdata(`/api/usercomments?user=${user}`)
+
+    let data = []
+
+    for (let index = 0; index < posts[0].length; index++) {
+        const element = posts[0][index];
+        data.push(element)
     }
 
-    let now = Date.now()
-    let posts = await fetchposts(now)
+    for (let index = 0; index < comments.length; index++) {
+        const element = comments[index];
+        data.push(element)
+    }
+
+    data = await data.sort((a,b) => { return a.createdAt - b.createdAt })
+    data.reverse()
+    console.log(data)
+
+    if(data.length == 0) {
+        let node = document.createElement("div");
+        node.id = 'post'
+
+        node.innerHTML = `
+            <h2>THIS USER NEVER POSTED ANYTHING</h2>
+        `
+        document.getElementById("overview").appendChild(node);
+        return
+    }
+
+    for (let index = 0; index < data.length; index++) {
+        const element = data[index];
+
+        let node = document.createElement("div");
+        node.id = 'post'
+
+        if(element.postTitle) {
+            await load_comment(element)
+        }
+        else {
+            await load_post(element)
+        }
+    }
+
+    if(posts[1].length > 0) {
+        console.log(posts[1].length)
+
+        for (let index = 0; index < posts[1].length; index++) {
+            const element = posts[1][index];
+            
+            if(element.up_down == -1 ) {
+                let upvote = document.getElementsByClassName(`${element.post}_down`)[0]
+                upvote.classList.value = `${element.post}_down downvote_orangered downvote_orangered1`
+                // console.log(upvote.classList)
+            } else {
+                let upvote = document.getElementsByClassName(`${element.post}_up`)[0]
+                upvote.classList.value = `${element.post}_up upvote_orangered upvote_orangered1`
+                // console.log(upvote.classList)
+            }
+        }
+    }
+}
+
+async function posts_load(){
+    document.getElementById("overview").innerHTML = ''
+
+    let posts = await fetchdata(`/api/activity?user=${user}`)
+
+    console.log(posts)
+
+    if(posts.length == 0) {
+        let node = document.createElement("div");
+        node.id = 'post'
+
+        node.innerHTML = `
+            <h2>THIS USER NEVER POSTED ANYTHING</h2>
+        `
+        document.getElementById("overview").appendChild(node);
+        return
+    }
 
     for (let index = 0; index < posts[0].length; index++) {
         let element = posts[0][index];
+        console.log('awd')
+        await load_post(element)
 
-        element.content = JSON.parse(element.content)
+    }
+
+    if(posts[1].length > 0) {
+        console.log(posts[1].length)
+
+        for (let index = 0; index < posts[1].length; index++) {
+            const element = posts[1][index];
+            
+            if(element.up_down == -1 ) {
+                let upvote = document.getElementsByClassName(`${element.post}_down`)[0]
+                upvote.classList.value = `${element.post}_down downvote_orangered downvote_orangered1`
+                // console.log(upvote.classList)
+            } else {
+                let upvote = document.getElementsByClassName(`${element.post}_up`)[0]
+                upvote.classList.value = `${element.post}_up upvote_orangered upvote_orangered1`
+                // console.log(upvote.classList)
+            }
+        }
+    }
+
+}
+
+async function user_comments() {
+    let comments = await fetchdata(`/api/usercomments?user=${user}`)
+
+    document.getElementById("overview").innerHTML = ''
+
+    if(comments.length == 0) {
+        let node = document.createElement("div");
+        node.id = 'post'
+
+        node.innerHTML = `
+            <h2>THIS USER NEVER COMMENTED ANYTHING</h2>
+        `
+        document.getElementById("overview").appendChild(node);
+        return
+    }
+
+    for (let index = 0; index < comments.length; index++) {
+        const element = comments[index];
+
+        await load_comment(element)
+    }
+
+}
+
+
+async function load_post(element) {
+    element.content = JSON.parse(element.content)
 
         console.log(element)
         let node = document.createElement("div");
@@ -101,32 +228,36 @@ async function start() {
 
         content = `${content}</div>`
 
-        // console.log(content)
-
         node.innerHTML = `${node.innerHTML}${content}`
 
-        document.getElementById("posts").appendChild(node);
+        document.getElementById("overview").appendChild(node);
+}
 
-        // console.log(element)
-    }
+async function load_comment(element) {
+    let node = document.createElement("div");
+        node.id = 'comment'
 
-    if(posts[1].length > 0) {
-        console.log(posts[1].length)
+        node.innerHTML = `
+            <p>commented <b><a id="basic_a" href="/post/${element.postId}">${element.postTitle}</a></b> posted by  <a id="basic_a" href="/user/${element.author}" >${element.author}</a></p>
+            <div id="comment_content"><span>${element.content}</span></div>
+        `
+        document.getElementById("overview").appendChild(node);
+        console.log(element)
+}
 
-        for (let index = 0; index < posts[1].length; index++) {
-            const element = posts[1][index];
-            
-            if(element.up_down == -1 ) {
-                let upvote = document.getElementsByClassName(`${element.post}_down`)[0]
-                upvote.classList.value = `${element.post}_down downvote_orangered downvote_orangered1`
-                // console.log(upvote.classList)
-            } else {
-                let upvote = document.getElementsByClassName(`${element.post}_up`)[0]
-                upvote.classList.value = `${element.post}_up upvote_orangered upvote_orangered1`
-                // console.log(upvote.classList)
-            }
-        }
-    }
+function fetchdata(url) {
+    return new Promise((resolve,reject) => {
+    fetch(url, {
+        method: 'GET',
+        headers: {
+            'Accept': 'application/json',
+        },
+    }).then(response => {
+        return response.text();
+        }).then(function(data) {
+            resolve(JSON.parse(data)); 
+        });
+    })
 }
 
 async function vote(up_or_down,post_id) {
@@ -175,6 +306,10 @@ async function vote(up_or_down,post_id) {
     })
 }
 
+function redirect(link) {
+    location.replace(link)
+}
+
 function postData(url = "",data = {}) {
 return new Promise((resolve, reject) => {
     data = JSON.stringify(data)
@@ -192,30 +327,3 @@ return new Promise((resolve, reject) => {
     xhr.send(data);
 })
 }
-
-function redirect(link) {
-    location.replace(link)
-}
-
-function fetchposts(before) {
-    return new Promise((resolve,reject) => {
-        console.log(before)
-
-    fetch(`/api/posts?before=${before}&type=p`, {
-        method: 'GET',
-        headers: {
-            'Accept': 'application/json',
-        },
-    }).then(response => {
-        return response.text();
-        }).then(function(data) {
-            resolve(JSON.parse(data)); 
-        });
-    })
-}
-
-document.querySelector('div').addEventListener('click', function(event) {
-    if (event.target.tagName.toLowerCase() === 'a') {
-      event.stopPropagation();
-    }
-  });

@@ -3,6 +3,7 @@ body {
     height: 100%;
     margin: 0;
     overflow-x: hidden;
+    background-color: #030303;
 }
 
 a {
@@ -13,6 +14,8 @@ a {
     display: flex;
     width: 100vw;
     border: 1px solid black;
+    background-color: rgb(26 26 27);
+    color: white;
 }
 
 #navbar p {
@@ -23,16 +26,18 @@ a {
 }
 
 #navbar p:hover {
-    background-color: rgb(158, 157, 157);
+    background-color: rgb(99, 99, 104);
     cursor: pointer;
+    color: black;
 }
 
 #a_log {
     float: right;
     margin: 15px;
     padding: 5px;
+    cursor: pointer;
     border-radius: 5px;
-    border: solid 1px black;
+    border: solid 1px rgb(253, 253, 253);
 }
 
 #a_log:hover {
@@ -56,14 +61,17 @@ a {
     border: 1px solid black;
     float: right;
     width: 320px;
+    color: white;
     margin-left: 30px;
     overflow: hidden;
     border-radius: 10px;
+    background-color: rgb(26 26 27);
 }
 
 #username {
     text-align: center;
     margin-bottom: 30px;
+    color: white;
 }
 
 #account_background img {
@@ -76,17 +84,6 @@ a {
     width: 640px;
     overflow: hidden;
     border: 1px solid black;
-}
-
-#post {
-    margin-left: auto;
-    margin-right: auto;
-    width: 600px;
-    border: 1px solid black;
-    margin-bottom: 10px;
-    margin-top: 10px;
-    padding-left: 10px;
-    overflow: hidden;
 }
 
 @media only screen and (max-width: 1009px) {
@@ -111,4 +108,147 @@ a {
 #basic_a:hover {
     text-decoration: underline;
     cursor: pointer;
+}
+
+
+#post {
+    background-color: rgb(26 26 27);
+    margin-bottom: 25px;
+    margin-top: 0;
+    border-radius: 10px;
+    overflow: hidden;
+    display: flex;
+    max-height: 600px;
+    color: white;
+}
+
+#comment {
+    background-color: rgb(26 26 27);
+    color: white;
+    margin-left: auto;
+    margin-right: auto;
+    width: 600px;
+    margin-bottom: 10px;
+    margin-top: 10px;
+    padding-left: 10px;
+    overflow: hidden;
+    border-radius: 15px;
+}
+
+#comment_content{
+    margin-bottom: 20px;
+    color: rgb(206, 206, 206);
+}
+
+#comment span {
+    white-space: pre-wrap;
+}
+
+#post h2 {
+    margin-top: 10px;
+    margin-bottom: 5px;
+}
+
+#post_link{
+    cursor: pointer;
+}
+
+#post:hover {
+    border: 2px solid white;
+    cursor: pointer;
+}
+
+#author_link {
+    cursor: pointer;
+}
+
+#author_link:hover {
+    text-decoration: underline;
+}
+
+#voting {
+    text-align: center;
+    /* margin-left: 5px; */
+    margin-top: 10px;
+    margin-right: 10px;
+}
+
+#upvotebox {
+    padding: 10px;
+    cursor: pointer;
+}
+
+#upvotebox:hover {
+    background-color: rgb(48, 47, 47);
+}
+
+#countbox {
+    text-align: center;
+    padding: 10px;
+}
+
+#downvotebox {
+    padding: 10px;
+    cursor: pointer;
+}
+
+#downvotebox:hover {
+    background-color: rgb(48, 47, 47);
+}
+
+#post_content {
+    margin-top: 10px;
+    white-space: pre-wrap;
+    margin-bottom: 20px;
+}
+
+#makeit {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+#title {
+    margin-top: 7px;
+}
+
+/* .spoiler {
+    color: rgb(170, 120, 26);
+    text-shadow: 4px 2px 2px #000, -2px -1px 0 #000, 1px -4px 2px #000, -1px 1px 0 #000;
+} */
+
+span.spoiler {
+    color: transparent;
+    padding: 0 4px;
+    background-color: rgb(190, 141, 34);
+}
+  
+span.spoiler:hover {
+    color: white;
+    background-color: initial;
+}
+
+span.nsfw {
+    color: transparent;
+    padding: 0 4px;
+    background-color: rgb(180, 64, 34);
+}
+  
+span.nsfw:hover {
+    color: white;
+    background-color: initial;
+}
+
+#image {
+    margin-top: 10px;
+    filter: none;
+}
+
+#image img{
+    max-width: 554px;
+    padding-right: 7px;
+}
+
+.blur {
+    filter: blur(9px);
 }

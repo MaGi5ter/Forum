@@ -9,6 +9,7 @@ async function start() {
         document.getElementById("profile").appendChild(node);
     }
 
+    loadpost()
     comments()
 
 }
@@ -17,7 +18,7 @@ async function comments(){
     await fetchdata(`/api/comments?post=${post_id}`).then(async (repli) => {
         
         if(repli[0].length > 0) {
-            for (let index = 1; index < repli[0].length; index++) {
+            for (let index = 0; index < repli[0].length; index++) {
                 const element = repli[0][index];
 
                 let node = document.createElement("div");
@@ -38,9 +39,7 @@ async function comments(){
                     </div>
                     <div id="replybutton" onclick="reply_textarea(${element.id})"><p>reply</p></div>
                 </div>
-                <div id="conte">
-                <p>${element.content}</p>
-                </div>
+                <div id="conte"><div id="conte_2"><span>${element.content}</span></div></div>
                 <div id="${element.id}"></div>
                 <div id="${element.id}_replies" class="replie"></div>
                 `
@@ -198,7 +197,7 @@ async function uploadreply(id){
     }).then((response) => {
         if(response == 'COMMENT ADDED') {
             document.getElementById('comments').innerHTML = ''
-            loadcomments()
+            comments()
         }
     })
 }
@@ -211,8 +210,9 @@ async function uploadcomment() {
         reply: null,
     }).then((response) => {
         if(response == 'COMMENT ADDED') {
+            document.getElementById('comment_content').value = ''
             document.getElementById('comments').innerHTML = ''
-            loadcomments()
+            comments()
         }
     })
 }
@@ -248,4 +248,68 @@ function fetchdata(url) {
             resolve(JSON.parse(data)); 
         });
     })
+}
+
+async function loadpost() {
+    let postcontent = await fetchdata(`/api/post_data?id=${post_id}`)
+    //here display post content
+    console.log(postcontent)
+
+    postcontent.content = JSON.parse(postcontent[0].content)
+
+    console.log(postcontent)
+
+    let content = `<div  id="makeit")">`
+    for (let index = 0; index < postcontent.content.length; index++) {
+        const e = postcontent.content[index];
+
+        console.log(e)
+
+        if(e.type == 'title') {
+            content = 
+            ` ${content}
+
+            <div id="title">
+                <h2>${e.content}</h2>
+            </div>
+
+            
+            <div id="author">
+                <a href="/user/${postcontent.author}" id="author_link">${postcontent[0].author}</a>
+            </div>
+
+            `
+        }
+        else if(e.type == 'text') {
+            // console.log(e)
+
+            content = 
+            ` ${content}<div id="post_content"><span class="${text_check(e)}">${e.content}</span></div>
+            `
+        }
+        else if(e.type == 'image') {
+            content = 
+            ` ${content}
+
+            <div id="image">
+                <img id="dropped_image" src='${e.image}'></img>
+            </div>
+            `
+        }
+        
+    }
+
+    function text_check(e) {
+        if( e.spoiler == true) {
+            return 'spoiler'
+        }
+        else if(e.nsfw == true ) {
+            return 'nsfw'
+        }
+        else return 'visible'
+    }
+
+    content = `${content}</div>`
+
+    document.getElementById('container_navbar').innerHTML = `${document.getElementById('container_navbar').innerHTML}${content}`
 }

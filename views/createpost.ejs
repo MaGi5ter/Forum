@@ -4,43 +4,101 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="style.css" type="text/css">
+    <link rel="stylesheet" href="/style_create.css" type="text/css">
     <title>GIKAM</title>
 </head>
 <body>
-    <div id="container">
 
-        <div id="account_info">
-
-            <p id="username"><%= username %></p>
-
-            <a href="/<%= link %>" id="a_log" ><%= logged_status %></a>
-            <a href="/" id="a_log">HOME</a>
-
-        </div>
+    <div id="navbar_top">
 
         <div id="navbar">
-            <h1>GIKAM</h1>    
+
+            <div id="left">
+                <a href="/"><h2>GIKAM</h2></a>
+                <!-- <h2>GIKAM</h2> -->
+            </div>
+    
+            <div id="right">
+                <a href="/<%= link %>" id="a_button_right"><%= logged_status %></a>
+                <div id="profile"></div>
+            </div>
+                
         </div>
+
+    </div>
+
+
+    <div id="container">
 
         <br>
 
+        <div id="creating_post">
+
+            <div id="navbar_post">
+
+                <div id="button_" onclick="addtext()"> Add Text </div>
+                <div id="button_" onclick="addimage()"> Add Image </div>
+                
+            </div>
+
+            <div id="post_content">
+                <div id="title_element">
+                    <textarea placeholder="Title..." id="title_area" rows="1"></textarea>
+                </div>
+
+
+                <div id="text_element">
+                    <div id="navbar_of_post_element"></div>
+
+                    <textarea placeholder="Write here" id="text_area" rows="1"></textarea>  
+
+                    <div id="footer_of_post_element">
+                        <div id="button_" onclick="delete_(this)">Delete</div>
+                        <div id="button_" onclick="mark_spoiler(this)">Mark As Spoiler</div>
+                        <div id="button_" onclick="mark_nsfw(this)">Mark As NSFW</div>
+                    </div>  
+                </div>
+                
+
+                <!-- <div id="image">
+
+                    <div id="navbar_of_post_element">
+                        <div id="orange">Marked As Spoiler</div>
+                        <div id="red">Marked As NSFW</div>
+                    </div>
+
+                    <div id="dropzone">Drop image or click here to select</div>
+                    <input type="file" id="file-input" style="display: none;">
+                    <div id="display_dropped"></div>
+
+                    <div id="footer_of_post_element">
+                        <div id="button_" onclick="delete_(this)">Delete</div>
+                        <div id="button_" onclick="mark_spoiler(this)">Mark As Spoiler</div>
+                        <div id="button_" onclick="mark_nsfw(this)">Mark As NSFW</div>
+                    </div>
+
+                </div> -->
+
+            </div>
+            <div id="submit_errors"></div>
+            <div id="submit_button">
+                <div id="submit_b" onclick="upload()"><b>UPLOAD POST</b></div>
+
+            </div>
+
+            <script src="/createpost.js"></script>
+
+            <script>
+
+               
+
+
+            </script>
+
+        </div>
+
         <h3 id="h3_error"><%= error_h3 %></h3>
         
-        <div id="create_post">
-            <form action="/create_post" method="post">
-
-                <label for="title">Title</label>
-                <br>
-                <input type="text" name="title" id="create_post_title">
-                <br>
-                <label for="content">Content</label>
-                <br>
-                <textarea name="content" cols="40" rows="5" id="create_post_content"></textarea>
-                <br><br>
-                <input type="submit" value="Create post">
-            </form>
-        </div>
     </div>
 </body>
 </html>

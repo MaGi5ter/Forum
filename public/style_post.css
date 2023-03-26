@@ -3,6 +3,7 @@ body {
     height: 100%;
     margin: 0;
     overflow-x: hidden;
+    background-color: #030303;
 }
 
 #voting {
@@ -10,6 +11,7 @@ body {
     margin-left: 10px;
     margin-right: 10px;
     text-align: center;
+    color: white;
 }
 
 #upvotebox {
@@ -46,6 +48,7 @@ a {
 #navbar_top {
     width: 100%;
     border: solid 1px black;
+    background-color: rgb(26 26 27);
 }
 
 #navbar {
@@ -60,6 +63,7 @@ a {
 #left {
     display: flex;
     margin-left: 50px;
+    color: white;
 }
 
 #left:hover{
@@ -69,6 +73,7 @@ a {
 #right {
     display: flex;
     margin-right: 50px;
+    color: white;
 }
 
 #a_button_right {
@@ -76,14 +81,13 @@ a {
     margin: 15px;
     padding: 5px;
     border-radius: 5px;
-    border: solid 1px black;
+    border: solid 1px rgb(255, 255, 255);
 }
 
 #a_button_right:hover {
     background-color: rgb(158, 157, 157);
     cursor: pointer;
 }
-
 #container {
     margin-top: 40px;
     width: 900px;
@@ -103,16 +107,21 @@ a {
 
 #container_navbar {
     display: flex;
+    background-color: rgb(26 26 27);
+    border-radius: 15px;
+
 }
 
 #post_content {
     margin-left: 40px;
     margin-right: 40px;
+    color: white;
 }
 
 #author_p {
     margin-left: 15px;
     margin-top: 35px;
+    color: white;
 }
 
 #ifloggedaddcomment h2{
@@ -134,18 +143,21 @@ a {
     align-items: center;
     justify-content: center;
     border-radius: 10px;
+    color: white;
 }
 
 #submit {
     margin: 0;
     margin-left: 20px;
     border: solid 1px black;
-    padding: 8px;
+    padding: 12px;
     border-radius: 5px;
+    height: 22px;
+    background-color: rgb(26 26 27);
 }
 
 #submit:hover {
-    background-color: rgb(158, 157, 157);
+    background-color: rgb(88, 88, 97);
     cursor: pointer;
 }
 
@@ -153,10 +165,17 @@ a {
     margin-top: 5px;
     margin-bottom: 5px;
     width: 600px;
-    height: 80px;
+    padding: 10px;
+    height: 20px;
     border-radius: 5px;
-    resize: vertical;
+    resize: none;
     font-size: large;
+    overflow: hidden;
+    overflow-x: hidden; 
+    overflow-wrap: break-word;
+
+    background-color: rgb(26 26 27);
+    color: white;
 }
 
 #comments {
@@ -167,10 +186,13 @@ a {
     margin-top: 20px;
     border-radius: 5px;
     overflow: hidden;
+    background-color: rgb(26 26 27);
+    margin-bottom: 50px;
 }
 
 #comment {
-    border-left: solid 1px black;
+    border-left: solid 1px rgb(145, 145, 145);
+    color: white;
     margin-left: 20px;
     margin-top: 20px;
     margin-bottom: 20px;
@@ -178,7 +200,7 @@ a {
 }
 
 .replie {
-    border-left: solid 1px black;
+    border-left: solid 1px rgb(98, 98, 102);
     margin-left: 20px;
 }
 
@@ -186,9 +208,13 @@ a {
     margin-top: 10px;
 }
 
-#conte p {
+#conte_2 {
     margin-top: -28px;
     margin-left: 50px;
+}
+
+#conte_2 span{
+    white-space: pre-wrap;
 }
 
 #nav_com {
@@ -212,18 +238,22 @@ a {
 
 #replybutton:hover {
     background-color: rgb(158, 157, 157);
+    color: black;
     cursor: pointer;
 }
 
 #reply_content {
     margin-top: 5px;
     margin-bottom: 5px;
+    color: white;
     margin-left: 20px;
     width: 405px;
     height: 80px;
     border-radius: 5px;
     resize: vertical;
     font-size: large;
+    background-color: rgb(26 26 27);
+    border: solid 1px rgb(80, 80, 85);
 }
 
 #justflex {
@@ -234,7 +264,7 @@ a {
     text-align: center;
     margin: 0;
     margin-left: 10px;
-    border: solid 1px black;
+    border: solid 1px rgb(94, 94, 100);
     padding-top: 8px;
     padding-bottom: 8px;
     border-radius: 5px;
@@ -243,13 +273,14 @@ a {
 
 #closetextare:hover{
     background-color: rgb(219, 93, 93);
+    color: black;
     cursor: pointer;
 }
 
 #submitreply {
     margin: 0;
     margin-left: 20px;
-    border: solid 1px black;
+    border: solid 1px rgb(94, 94, 100);
     padding: 8px;
     border-radius: 5px;
     width: 340px;
@@ -257,14 +288,54 @@ a {
 
 #submitreply:hover {
     background-color: rgb(174, 221, 120);
+    color: black;
     cursor: pointer;
 }
 
 #post_content {
-    margin-top: -10px;
+    margin-top: 10px;
     white-space: pre-wrap;
     margin-bottom: 20px;
-    padding-left: 10px;
-    padding-right: 10px;
-    overflow: auto;
+    margin-left: 0;
+}
+
+#makeit {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    color: white;
+}
+
+#title {
+    margin-top: 7px;
+}
+
+/* .spoiler {
+    color: rgb(170, 120, 26);
+    text-shadow: 4px 2px 2px #000, -2px -1px 0 #000, 1px -4px 2px #000, -1px 1px 0 #000;
+} */
+
+span.spoiler {
+    color: white;
+    padding: 0 4px;
+}
+  
+span.spoiler:hover {
+    color: white;
+    background-color: initial;
+}
+
+span.nsfw {
+    color: white;
+    padding: 0 4px;
+}
+  
+span.nsfw:hover {
+    color: white;
+    background-color: initial;
+}
+
+#image img {
+    max-width: 745px;
+    padding-right: 7px;
 }

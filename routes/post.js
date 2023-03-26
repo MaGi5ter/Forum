@@ -38,8 +38,6 @@ router
                     post: {
                         id : postData[0].id,
                         author : postData[0].author,
-                        content: postData[0].content,
-                        title: postData[0].title,
                         votes: postData[0].votes
                     },
                     voted : voted,

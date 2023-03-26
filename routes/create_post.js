@@ -50,7 +50,6 @@ router
                 let sql = `INSERT INTO posts (ID, authorID,author, createdAt, content, title) VALUES (NULL, ? ,? , ?, ?, ?);`
                 let sql_parm = [id[0].ID, req.session.username, Date.now(), content , title]
 
-
                 console.log(req.session)
                 console.log(await dbquery(sql,sql_parm))
 
