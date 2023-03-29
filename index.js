@@ -4,14 +4,24 @@ const cors = require("cors");
 var   MySQLStore = require('express-mysql-session')(session);
 
 const config = require('./config.json')
-const PORT = 40387
+const PORT = 80
 
 //APP SETUP
 const app = express()
-const age = 1000 * 60 * 60 * 6;
+const age = 1000 * 60 * 60 * 48;
 
 //MYSQL
 const db = require('./mysql')
+
+//DISCORD BCS I HAVE LIMTED SPACE ON MY MSQL // DISCORD JS 13
+const { Client, Intents} = require('discord.js');
+const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES] });
+client.login(config.discord_bot);
+client.channels.fetch(config.channel)
+
+module.exports = {
+    client : client,
+}
 
 let sessionStore = new MySQLStore({}, db);
 
@@ -22,6 +32,7 @@ const sessionMiddleware = session({
     resave: false,
     store: sessionStore,
 })
+app.use(express.json({ limit: '25mb' }));
 
 app.use(cors({
     origin: config.your_domain
@@ -32,11 +43,15 @@ app.set('view engine', 'ejs')
 app.use(express.urlencoded({ extended: true}))
 app.use(express.static(__dirname + '/public'))
 
-const server = app.listen(PORT, function () {
+app.listen(PORT , function () {
     console.log(`Listening on port ${PORT}`);
     console.log(`http://localhost:${PORT}`);
 });
 
+app.use((req, res, next) => {
+    res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+    next();
+});
 
 //ROUTES
 const mainRoute = require("./routes/main")

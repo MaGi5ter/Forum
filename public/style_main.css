@@ -98,12 +98,39 @@ a {
     border: solid 1px black;
     overflow: hidden;
     display: flex;
+    border: 2px solid transparent;
     max-height: 600px;
+    position: relative;
+}
+
+#post_navbar {
+    display: flex;
+    flex-direction: column;
+    margin-right: 10px;
+}
+
+#show_full_button {
+    position: absolute; 
+    bottom: 10px; 
+    width: 320px;
+    opacity: 0.8;
+    margin-left: 240px;
+    margin-right: 240px;
+    background-color: rgb(108, 108, 114);
+    border-radius: 5px;
+    height: 40px;
+    color: white;
+    border: none;
+}
+
+#show_full_button:hover {
+    background-color: rgb(46, 46, 51);
+    cursor: pointer;
 }
 
 #post h2 {
-    margin-top: 10px;
-    margin-bottom: 5px;
+    margin-bottom: 0px;
+    margin-top: 0;
 }
 
 #post_link{
@@ -113,6 +140,12 @@ a {
 #post:hover {
     border: 2px solid white;
     cursor: pointer;
+}
+
+#author {
+    font-size: small;
+    margin-top: 3px;
+    color: #a7a1a1;
 }
 
 #author_link {
@@ -168,11 +201,6 @@ a {
 #title {
     margin-top: 7px;
 }
-
-/* .spoiler {
-    color: rgb(170, 120, 26);
-    text-shadow: 4px 2px 2px #000, -2px -1px 0 #000, 1px -4px 2px #000, -1px 1px 0 #000;
-} */
 
 span.spoiler {
     color: transparent;

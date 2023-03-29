@@ -17,7 +17,7 @@ async function start() {
 
         element.content = JSON.parse(element.content)
 
-        console.log(element)
+        // console.log(element)
         let node = document.createElement("div");
         node.id = 'post'
         
@@ -43,19 +43,19 @@ async function start() {
         for (let index = 0; index < element.content.length; index++) {
             const e = element.content[index];
 
-            console.log(e)
+            // console.log(e)
 
             if(e.type == 'title') {
                 content = 
                 ` ${content}
 
-                <div id="title">
-                    <h2>${e.content}</h2>
-                </div>
-
-                
+                <div id='post_navbar'>
                 <div id="author">
-                    <a href="/user/${element.author}" id="author_link">${element.author}</a>
+                        <span>Uploaded by </span><a href="/user/${element.author}" id="author_link">${element.author}</a>
+                    </div>
+                    <div id="title">
+                        <h2>${e.content}</h2>
+                    </div>
                 </div>
 
                 `
@@ -105,9 +105,54 @@ async function start() {
 
         node.innerHTML = `${node.innerHTML}${content}`
 
-        document.getElementById("posts").appendChild(node);
+        // console.log(node.querySelector('#makeit').style.height)
 
-        // console.log(element)
+        // if(node.querySelector('#makeit').scrollHeight > node.style.height) {
+        //     console.log(node)
+        // }
+
+        document.getElementById("posts").appendChild(node);
+        const images = node.getElementsByTagName('img');
+        const height = node.getBoundingClientRect().height;
+
+        // console.log(images.length)
+
+        if(images.length > 0) {
+            for (let i = 0; i < images.length; i++) {
+                images[i].addEventListener('load', function() {
+                  const height = node.getBoundingClientRect().height;
+                  console.log(height)
+              
+                  if (height > 600) {
+                    const button = document.createElement('button');
+                    button.textContent = 'View Full Post';
+                    button.id = 'show_full_button'
+                    button.addEventListener('click', () => {
+                        redirect(`/post/${element.id}`)
+                        // do something when the button is clicked
+                      });
+              
+                    node.appendChild(button);
+                    i = images.length
+                    // console.log(node)
+                  }
+                });
+            }
+        }
+        else {
+            if(height > 600) {
+                const button = document.createElement('button');
+                button.textContent = 'View Full Post';
+                button.id = 'show_full_button'
+                button.addEventListener('click', () => {
+                    redirect(`/post/${element.id}`)
+                    // do something when the button is clicked
+                  });
+
+                node.appendChild(button);
+                // console.log(node)
+            }
+        }
     }
 
     if(posts[1].length > 0) {
@@ -127,6 +172,30 @@ async function start() {
             }
         }
     }
+
+    // const posts_check = document.querySelectorAll('#post');
+    // const posts_check = document.querySelectorAll('[id^="post"]');
+
+    // posts_check.forEach((post) => {
+
+    //     // let check =post.getElementById('makeit')
+    //     // console.log(post.scrollHeight)
+
+    // if (post.scrollHeight > 600) {
+    //     console.log(post)
+
+    //     const button = document.createElement('button');
+    //     button.textContent = 'View Full';
+
+    //     button.style.position = 'relative';
+    //     button.style.bottom = '80%';
+    //     button.style.left = '50%';
+    //     button.style.transform = 'translateX(-50%)';
+
+    //     post.appendChild(button);
+    // }
+    // });
+
 }
 
 async function vote(up_or_down,post_id) {

@@ -218,7 +218,13 @@ router
     })
     .post(async (req,res) => {
         if(req.params.type == "comment") {
-            if(req.session.loggedIn == true) {
+
+            if(req.session.lastCommentTime == undefined) {
+                console.log('first_POST')
+                req.session.lastCommentTime = 0
+            }            
+
+            if(req.session.loggedIn == true && Date.now() - req.session.lastCommentTime > 1000 * 20) {
 
                 data = req.body
 
@@ -247,6 +253,8 @@ router
                     userID = userID[0].ID
                     console.log(userID)
     
+                    req.session.lastCommentTime = Date.now()
+
                     let sql = `INSERT INTO comments (id, authorID,author,               content,      createdAt, replyID,     postID) VALUES (NULL, ? ,? , ?, ?, ?,?);`
                     let sql_parm =                      [userID , req.session.username, data.content, Date.now() ,data.reply, data.postID]
                     
@@ -255,6 +263,9 @@ router
                     res.send('COMMENT ADDED')
 
                 }
+            }
+            else if(Date.now() - req.session.lastCommentTime < 1000 * 20) {
+                res.send("You've been rate limited")
             }
             else res.send('verification failed')
         }
@@ -365,7 +376,12 @@ router
         }
         else if(req.params.type == 'post') {
 
-            if(req.session.loggedIn == true) {
+            if(req.session.lastPostTime == undefined) {
+                console.log('first_POST')
+                req.session.lastPostTime = 0
+            }            
+
+            if(req.session.loggedIn == true && Date.now() - req.session.lastPostTime > 1000 * 60 * 2 ) {
                 let post_data = req.body
                 let total_length = 0
 
@@ -479,6 +495,9 @@ router
                 }
                 else {  //here data provided by user is accepted
 
+                    //SIMPLE LIMIT HOW MANY POSTS USER CAN CREATE // TO AVOID SPAM
+                    req.session.lastPostTime = Date.now()
+
                     let finall_data = []
 
                     for (let index = 0; index < approved_data.length; index++) {
@@ -518,6 +537,9 @@ router
                     }
 
                 }
+            }
+            else if(Date.now() - req.session.lastPostTime < 1000 * 60 * 2) {
+                res.send({error: "You've been rate limited"})
             }
             else res.send({error: "Authorize"})
         }
