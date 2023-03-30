@@ -213,6 +213,24 @@ router
                 res.send(post_data)
             }
         }
+        else if(req.params.type == 'users') {
+
+            if(req.session.loggedIn == true) {
+                let isAdmin = await dbquery('SELECT privileges FROM users WHERE login = ?',[req.session.username])
+                isAdmin = isAdmin[0].privileges
+
+                if(isAdmin > 0) {
+                    const limit = 25;
+                    const offset = req.query.offset ? parseInt(req.query.offset) : 0;
+
+                    const query = `SELECT * FROM users LIMIT ? OFFSET ?`;
+                    let query_params = [limit,offset]
+
+                    res.send(await dbquery(query,query_params))
+                }
+
+            }
+        }
         else res.send({some: 'nothing'})
 
     })

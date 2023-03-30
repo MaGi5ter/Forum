@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="/admin_style.css">
+    <title>Admin Dashboard</title>
+
+</head>
+<body>
+    <div id="sidebar">
+      <button class="nav-button" id="button1">MANAGE USERS</button>
+      <button class="nav-button" id="button2">Button 2</button>
+      <button class="nav-button" id="button3">Button 3</button>
+    </div>
+    <div id="main-content">
+
+      <h1>Admin Dashboard</h1>
+
+      <div id="content1" class="content active">
+
+        <div id="users_list">
+            <table id="user-list">
+                <tr>
+                    <td>ID</td> <td>username</td> <td>E-MAIL</td> <td>PRIVILEGES</td> <td>DELETED</td> <td>MUTE</td>
+                </tr>
+            </table>
+            <button id="load-more">Load More</button>
+        </div>
+
+      </div>
+      <div id="content2" class="content">
+        <p>Content for button 2 goes here</p>
+      </div>
+      <div id="content3" class="content">
+        <p>Content for button 3 goes here</p>
+      </div>
+    </div>
+    <script>
+
+        let offset = 0;
+
+        $(document).ready(() => {
+        // Load first 25 users
+        loadUsers();
+
+        // Load more users when "Load More" button is clicked
+        $('#load-more').click(() => {
+                offset += 25;
+                loadUsers();
+            });
+        });
+
+        function loadUsers() {
+        $.ajax({
+            url: '/api/users',
+            data: { offset: offset },
+            success: (data) => {
+                data.forEach((user) => {
+                    $('#user-list').append(`
+                        <tr class="user_list_row">
+                            <td>${user.ID}</td> <td>${user.login}</td> <td>${user.email}</td> <td>${user.privileges}</td> <td>${user.deleted}</td> <td>${user.muted_to}</td>
+                        </tr>
+                    `);
+                });
+            }
+        });
+        }
+
+
+      // Get all the nav buttons and content areas
+      const navButtons = document.querySelectorAll('.nav-button');
+      const contentAreas = document.querySelectorAll('.content');
+
+      // Add a click event listener to each nav button
+      navButtons.forEach(button => {
+        button.addEventListener('click', () => {
+          // Remove the active class from all nav buttons and content areas
+          navButtons.forEach(button => button.classList.remove('active'));
+          contentAreas.forEach(area => area.classList.remove('active'));
+
+          // Add the active class to the clicked nav button and corresponding content area
+          button.classList.add('active');
+          const contentId = button.id.replace('button', 'content');
+          document.getElementById(contentId).classList.add('active');
+        });
+      });
+    </script>
+  </body>
+</html>

@@ -74,3 +74,6 @@ app.use('/user',userRoute)
 
 const postRoute = require("./routes/post")
 app.use('/post',postRoute)
+
+const adminRoute = require("./routes/admin")
+app.use('/admin',adminRoute)
