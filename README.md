@@ -1,7 +1,7 @@
 # full_forum
 I'm creating a simple forum but with full options of moderation editing, banning,voting etc. systems
 
-currently abandonned, I will return to it in few weeks
+currently abandonned, I will return to it in few weeks, I hope I will be able to remake it to react
 
 # TO DO 
 
