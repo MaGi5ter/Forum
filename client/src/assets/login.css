@@ -54,10 +54,14 @@
 #extra-buttons button {
     padding: 10px;
     width: 100%;
-    margin: 5px;
     border-radius: 10px;
     border: none;
     font-size: 15px;
+}
+
+#extra-buttons a {
+    width: 100%;
+    margin: 5px;
 }
 
 .forgot-button {

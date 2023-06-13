@@ -26,7 +26,6 @@ function Login() {
   const [username, setUserName] = useState("");
   const [password, setPassword] = useState("");
   const [usernameError, setUsernameError] = useState("");
-  const [passwordError, setPasswordError] = useState("");
   const [loginError, setLoginError] = useState("");
   const [checkedToken, setCheckedToken] = useState(false);
 
@@ -96,13 +95,6 @@ function Login() {
           <input type="text" onChange={handleUserName} placeholder="Login" />
           <br />
           <label htmlFor="password">Password</label> <br />
-          {passwordError != "" ? (
-            <>
-              <span className="error-message">{passwordError}</span> <br />
-            </>
-          ) : (
-            <></>
-          )}
           <input
             type="password"
             onChange={handlePassword}
@@ -118,8 +110,12 @@ function Login() {
         </button>
       </form>
       <div id="extra-buttons">
-        <button className="forgot-button">Forgot Password</button>
-        <button className="register-button">Register</button>
+        <a href="">
+          <button className="forgot-button">Forgot Password</button>
+        </a>
+        <a href="/signup">
+          <button className="register-button">Register</button>
+        </a>
       </div>
     </div>
   );
