@@ -1,0 +1,82 @@
+#form-box {
+    background-color: rgb(39, 39, 43);
+    border-radius: 10px;
+    width: fit-content;
+    color: white;
+    padding: 25px;
+    margin: auto;
+    margin-top: 100px;
+}
+
+#form-box form {
+    display: flex;
+    flex-direction: column;
+}
+
+#form-box h2 {
+    text-align: center;
+}
+
+.submit-button {
+    padding: 10px;
+    width: 320px;
+    border: none;
+    border-radius: 10px;
+    margin: 5px;
+    font-weight: 700;
+    font-size: 16px;
+    background-color: rgb(93, 207, 207);
+    cursor: pointer;
+}
+
+.submit-button:hover {
+    background-color: rgb(111, 247, 247);
+}
+
+#text-inputs input{
+    width: 300px;
+    padding: 10px;
+    border: none;
+    margin: 5px;
+    border-radius: 10px;
+}
+
+#text-inputs label {
+    margin-left: 5px;
+    font-size: large;
+    margin-top: 10px;
+}
+
+#extra-buttons {
+    display: flex;
+}
+
+#extra-buttons button {
+    padding: 10px;
+    width: 100%;
+    margin: 5px;
+    border-radius: 10px;
+    border: none;
+    font-size: 15px;
+}
+
+.forgot-button {
+    background-color: rgb(230, 240, 237);
+    border: initial;
+    cursor: not-allowed;
+}
+
+.register-button {
+    background-color: cornflowerblue;
+    cursor: pointer;
+}
+
+.register-button:hover {
+    background-color: rgb(156, 189, 250);
+}
+
+.error-message {
+    color: rgb(223, 76, 76);
+    text-align: center;
+    font-weight: 600;
+}
