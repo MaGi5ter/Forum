@@ -1,0 +1,48 @@
+nav {
+    margin: 0;
+    width: 100vw;
+    background-color: rgb(39, 39, 43);
+}
+
+.navContent {
+    max-width: 1600px;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 10px;
+    padding-right: 10px;
+    color: white;
+    display: flex;
+    justify-content: space-between;
+}
+
+.navContent a {
+    font-size: 16px;
+}
+
+.buttons {
+    display: flex;
+    align-items: center;
+    width: fit-content;
+}
+
+.buttons a {
+    background-color: white;
+    border: 2px solid white;
+    color: black;
+    padding: 8px;
+    font-weight: 500;
+    font-size: 16px;
+    margin-left: 10px;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+#register-button {
+    background-color: rgb(39, 39, 43);
+    color: white;
+}
+
+#register-button:hover {
+    background-color: white;
+    color: black;
+}

@@ -1,0 +1,239 @@
+body {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    overflow-x: hidden;
+    background-color: #030303;
+}
+
+a {
+    all: unset;
+}
+
+#navbar_top {
+    width: 100%;
+    border: solid 1px black;
+    background-color: rgb(26 26 27);
+}
+
+#navbar {
+    display: flex;
+    width: 900px;
+    justify-content: space-between;
+    align-items: center;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#left {
+    display: flex;
+    margin-left: 50px;
+    color: white;
+}
+
+#left:hover{
+    cursor: pointer;
+}
+
+#right {
+    display: flex;
+    margin-right: 50px;
+    color: white;
+}
+
+#a_button_right {
+    float: right;
+    margin: 15px;
+    padding: 5px;
+    border-radius: 5px;
+    border: solid 1px rgb(255, 255, 255);
+}
+
+#a_button_right:hover {
+    background-color: rgb(158, 157, 157);
+    cursor: pointer;
+}
+
+#container {
+    color: white;
+    margin-top: 40px;
+    width: 900px;
+    margin-left: auto;
+    margin-right: auto;
+    border: solid 1px black;
+    border-radius: 5px;
+}
+
+#create_post {
+    margin-left: auto;
+    margin-right: auto;
+    width: 775px;
+    margin-top: 20px;
+    border: solid 1px black;
+    text-align: center;
+    cursor: pointer;
+    border-radius: 5px;
+    font-family: 'Courier New', Courier, monospace;
+    padding: 10px;
+}
+
+#create_post:hover {
+    background-color: rgb(110, 209, 110);
+    color: #030303;
+}
+
+#posts {
+    width: 800px;
+    margin-top: 20px;
+    border-top: 1px solid black;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 20px;
+}
+
+#post {
+    background-color: rgb(26 26 27);
+    margin-top: 20px;
+    border-radius: 10px;
+    border: solid 1px black;
+    overflow: hidden;
+    display: flex;
+    border: 2px solid transparent;
+    max-height: 600px;
+    position: relative;
+}
+
+#post_navbar {
+    display: flex;
+    flex-direction: column;
+    margin-right: 10px;
+}
+
+#show_full_button {
+    position: absolute; 
+    bottom: 10px; 
+    width: 320px;
+    opacity: 0.8;
+    margin-left: 240px;
+    margin-right: 240px;
+    background-color: rgb(108, 108, 114);
+    border-radius: 5px;
+    height: 40px;
+    color: white;
+    border: none;
+}
+
+#show_full_button:hover {
+    background-color: rgb(46, 46, 51);
+    cursor: pointer;
+}
+
+#post h2 {
+    margin-bottom: 0px;
+    margin-top: 0;
+}
+
+#post_link{
+    cursor: pointer;
+}
+
+#post:hover {
+    border: 2px solid white;
+    cursor: pointer;
+}
+
+#author {
+    font-size: small;
+    margin-top: 3px;
+    color: #a7a1a1;
+}
+
+#author_link {
+    cursor: pointer;
+}
+
+#author_link:hover {
+    text-decoration: underline;
+}
+
+#voting {
+    text-align: center;
+    /* margin-left: 5px; */
+    margin-top: 10px;
+    margin-right: 10px;
+}
+
+#upvotebox {
+    padding: 10px;
+    cursor: pointer;
+}
+
+#upvotebox:hover {
+    background-color: rgb(48, 47, 47);
+}
+
+#countbox {
+    text-align: center;
+    padding: 10px;
+}
+
+#downvotebox {
+    padding: 10px;
+    cursor: pointer;
+}
+
+#downvotebox:hover {
+    background-color: rgb(48, 47, 47);
+}
+
+#post_content {
+    margin-top: 10px;
+    white-space: pre-wrap;
+    margin-bottom: 20px;
+}
+
+#makeit {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+#title {
+    margin-top: 7px;
+}
+
+span.spoiler {
+    color: transparent;
+    padding: 0 4px;
+    background-color: rgb(190, 141, 34);
+}
+  
+span.spoiler:hover {
+    color: white;
+    background-color: initial;
+}
+
+span.nsfw {
+    color: transparent;
+    padding: 0 4px;
+    background-color: rgb(180, 64, 34);
+}
+  
+span.nsfw:hover {
+    color: white;
+    background-color: initial;
+}
+
+#image {
+    margin-top: 10px;
+    filter: none;
+}
+
+#image img{
+    max-width: 745px;
+    padding-right: 7px;
+}
+
+.blur {
+    filter: blur(9px);
+}
