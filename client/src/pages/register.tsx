@@ -8,6 +8,7 @@ function Register() {
   const [password, setPassword] = useState("");
   const [usernameError, setUsernameError] = useState("");
   const [passwordError, setPasswordError] = useState("");
+  const [registerError, setRegisterError] = useState("");
   const [checkedToken, setCheckedToken] = useState(false);
 
   if (!checkedToken) handleTokenCheck();
@@ -61,7 +62,7 @@ function Register() {
       email: email,
     };
 
-    const data = await fetch(`${apiPath}/api/login`, {
+    const data = await fetch(`${apiPath}/api/register`, {
       method: "POST",
       mode: "cors",
       headers: {
@@ -73,7 +74,14 @@ function Register() {
     if (data.status != 200) {
       console.log(data);
     } else {
-      // window.location.replace("/login");
+      let newdata = await data.json();
+      console.log(newdata);
+      if (newdata.created) {
+        localStorage.setItem("token", newdata.token);
+        window.location.replace("/");
+      } else {
+        setRegisterError(newdata.error);
+      }
     }
   };
 
@@ -124,7 +132,7 @@ function Register() {
           <label htmlFor="password">Password</label> <br />
           {passwordError != "" ? (
             <>
-              <span className="error-message-register">{passwordError}</span>{" "}
+              <span className="error-message-register">{passwordError}</span>
               <br />
             </>
           ) : (
@@ -138,6 +146,14 @@ function Register() {
           />
           <br />
         </div>
+        {registerError != "" ? (
+          <>
+            <br />
+            <span className="error-message-register">{registerError}</span>
+          </>
+        ) : (
+          <></>
+        )}
         <button type="submit" className="submit-button">
           Register
         </button>
